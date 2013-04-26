@@ -1,4 +1,5 @@
 var m = angular.module('dcms', ['dcmsServices']);
+
 m.config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('[[');
   $interpolateProvider.endSymbol(']]');
@@ -59,3 +60,7 @@ function QueryCtrl($scope, $http, Query) {
     $scope.showEdit = 0;
   };
 }
+
+$(document).ready(function() {
+  // ...
+});
