@@ -131,6 +131,7 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
+	content.Fields = make(map[string] string)
 	content.Path = path
 	id := sha1sum(content)
 	content.Id = id
