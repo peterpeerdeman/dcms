@@ -71,13 +71,6 @@ type Document struct {
 	Fields map[string] string
 }
 
-var messageChannel chan message
-
-func Init() {
-	messageChannel = make(chan message)
-	go DocumentProcessor(messageChannel)
-}
-
 func AllDocument(response http.ResponseWriter, request *http.Request) {
 	readChan := make(chan interface{})
 	msg := message{op: opReadAll, resp: readChan}
