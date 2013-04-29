@@ -1,0 +1,11 @@
+GET     /rest/document          retrieve all documents
+POST    /rest/document          create a new document, data with metadata
+GET     /rest/document/{id}     retrieve a document
+PUT     /rest/document/{id}     update a document's content, data without metadata
+DELETE  /rest/document/{id}     delete a document
+
+GET     /rest/template          retrieve all templates
+POST    /rest/template          create a new template
+GET     /rest/template/{id}     retrieve a template
+PUT     /rest/template/{id}     update a template
+DELETE  /rest/template/{id}     delete a template

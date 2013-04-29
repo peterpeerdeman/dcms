@@ -3,11 +3,8 @@ package resty
 import (
 	"encoding/json"
 	"net/http"
-	"io"
 	"io/ioutil"
-	"crypto/sha1"
 	"github.com/gorilla/mux"
-	"fmt"
 	"log"
 )
 
@@ -28,6 +25,14 @@ type message struct {
 	resp chan interface{}
 }
 
+type Document struct {
+	Id string
+	Path string
+	Type string
+	Name string
+	Fields map[string] string
+}
+
 func DocumentProcessor(messageChannel chan message) {
 	documents := make(map[string] Document)
 	for {
@@ -46,7 +51,10 @@ func DocumentProcessor(messageChannel chan message) {
 			case opReadAll:
 				msg.resp <- map2slice(documents)
 			case opUpdate:
-				documents[msg.id] = msg.value
+				doc := documents[msg.id]
+				doc.Name = msg.value.Name
+				doc.Fields = msg.value.Fields
+				documents[msg.id] = doc
 			case opDelete:
 				delete(documents, msg.id)
 			}
@@ -62,13 +70,6 @@ func map2slice(m map[string] Document) []Document {
 		idx++
 	}
 	return v
-}
-
-type Document struct {
-	Id string
-	Path string
-	Name string
-	Fields map[string] string
 }
 
 func AllDocument(response http.ResponseWriter, request *http.Request) {
@@ -120,8 +121,6 @@ func PutDocument(response http.ResponseWriter, request *http.Request) {
 }
 
 func PostDocument(response http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	path := vars["path"]
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
@@ -132,7 +131,6 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	content.Fields = make(map[string] string)
-	content.Path = path
 	id := sha1sum(content)
 	content.Id = id
 	readChan := make(chan interface{})
@@ -148,11 +146,4 @@ func DeleteDocument(response http.ResponseWriter, request *http.Request) {
 	id := vars["id"]
 	msg := message{op: opDelete, id: id}
 	messageChannel <- msg
-}
-
-func sha1sum(value interface{}) string {
-	data, _ := json.Marshal(value)
-	h := sha1.New()
-	io.WriteString(h, string(data))
-	return fmt.Sprintf("%x", h.Sum(nil))
 }
