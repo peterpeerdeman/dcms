@@ -24,7 +24,7 @@ const (
 type message struct {
 	op opCode
 	id string
-	value Content
+	value Document
 	resp chan interface{}
 }
 
@@ -32,34 +32,33 @@ type contentResponse struct {
 	Id string
 }
 
-func ContentProcessor(messageChannel chan message) {
-	var ContentMap map[string] Content
-	ContentMap = make(map[string] Content)
+func DocumentProcessor(messageChannel chan message) {
+	documents := make(map[string] Document)
 	for {
 		select {
 		case msg, msg_ok := <-messageChannel:
 			if !msg_ok {
-				log.Println("ContentProcessor: Channel closed")
+				log.Println("DocumentProcessor: Channel closed")
 				return
 			}
 			log.Printf("%v", msg)
 			switch msg.op {
 			case opCreate:
-				ContentMap[msg.id] = msg.value
+				documents[msg.id] = msg.value
 			case opRead:
-				msg.resp <- ContentMap[msg.id]
+				msg.resp <- documents[msg.id]
 			case opReadAll:
-				msg.resp <- ContentMap
+				msg.resp <- documents
 			case opUpdate:
-				ContentMap[msg.id] = msg.value
+				documents[msg.id] = msg.value
 			case opDelete:
-				delete(ContentMap, msg.id)
+				delete(documents, msg.id)
 			}
 		}
 	}
 }
 
-type Content struct {
+type Document struct {
 	Name string
 	Fields []string
 }
@@ -68,10 +67,10 @@ var messageChannel chan message
 
 func Init() {
 	messageChannel = make(chan message)
-	go ContentProcessor(messageChannel)
+	go DocumentProcessor(messageChannel)
 }
 
-func AllContent(response http.ResponseWriter, request *http.Request) {
+func AllDocument(response http.ResponseWriter, request *http.Request) {
 	readChan := make(chan interface{})
 	msg := message{op: opReadAll, resp: readChan}
 	messageChannel <- msg
@@ -80,14 +79,13 @@ func AllContent(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
-	response.Header().Set("Content-Type", "application/json")
+	response.Header().Set("Document-Type", "application/json")
 	response.Write(out)
 }
 
-func GetContent(response http.ResponseWriter, request *http.Request) {
+func GetDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	log.Printf("GET content id = %s", id)
 	readChan := make(chan interface{})
 	msg := message{op: opRead, id: id, resp: readChan}
 	messageChannel <- msg
@@ -96,18 +94,18 @@ func GetContent(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
-	response.Header().Set("Content-Type", "application/json")
+	response.Header().Set("Document-Type", "application/json")
 	response.Write(out)
 }
 
-func PutContent(response http.ResponseWriter, request *http.Request) {
+func PutDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
 	}
-	var content Content
+	var content Document
 	jsonErr := json.Unmarshal(bodyBytes, &content)
 	if RestError(jsonErr, response) {
 		return
@@ -117,12 +115,12 @@ func PutContent(response http.ResponseWriter, request *http.Request) {
 	messageChannel <- msg
 }
 
-func PostContent(response http.ResponseWriter, request *http.Request) {
+func PostDocument(response http.ResponseWriter, request *http.Request) {
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
 	}
-	var content Content
+	var content Document
 	jsonErr := json.Unmarshal(bodyBytes, &content)
 	if RestError(jsonErr, response) {
 		return
@@ -135,12 +133,12 @@ func PostContent(response http.ResponseWriter, request *http.Request) {
 		Id string
 	}
 	resp.Id = id
-	response.Header().Set("Content-Type", "application/json")
+	response.Header().Set("Document-Type", "application/json")
 	out, _ := json.Marshal(resp)
 	response.Write(out)
 }
 
-func DeleteContent(response http.ResponseWriter, request *http.Request) {
+func DeleteDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
 	msg := message{op: opDelete, id: id}

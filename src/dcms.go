@@ -51,11 +51,11 @@ func main() {
 	router.HandleFunc("/", HomeHandler)
 
 	resty.Init()
-	router.HandleFunc("/rest/content", resty.AllContent).Methods("GET")
-	router.HandleFunc("/rest/content", resty.PostContent).Methods("POST")
-	router.HandleFunc("/rest/content/{id}", resty.GetContent).Methods("GET")
-	router.HandleFunc("/rest/content/{id}", resty.PutContent).Methods("PUT")
-	router.HandleFunc("/rest/content/{id}", resty.DeleteContent).Methods("DELETE")
+	router.HandleFunc("/rest/document", resty.AllDocument).Methods("GET")
+	router.HandleFunc("/rest/document", resty.PostDocument).Methods("POST")
+	router.HandleFunc("/rest/document/{id}", resty.GetDocument).Methods("GET")
+	router.HandleFunc("/rest/document/{id}", resty.PutDocument).Methods("PUT")
+	router.HandleFunc("/rest/document/{id}", resty.DeleteDocument).Methods("DELETE")
 
 	http.Handle("/", router)
 	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./assets"))))
