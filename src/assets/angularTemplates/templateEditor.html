@@ -1,3 +1,16 @@
-{{test}}
 
-        sadasd
+
+{{templates}}
+
+<select>
+    <option ng-repeat="template in templates">{{template.Type}}</option>
+</select>
+
+<ul>
+    <li ng-repeat="field in fields">{{field.name}}</li>
+</ul>
+
+<form ng-submit="addField()">
+    <input type="text" ng-model="newField">
+    <button>Add field</button>
+</form>

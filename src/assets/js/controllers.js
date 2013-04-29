@@ -41,6 +41,14 @@ angular.module('dcms.controllers', [])
         }
     })
 
-    .controller('TemplateEditorCtrl', function TemplateEditorCtrl($scope){
-        $scope.test = 'test123';
+    .controller('TemplateOverviewCtrl', function TemplateOverviewCtrl($scope, TemplateStorage, $routeParams){
+        $scope.templates = TemplateStorage.getAll();
+        $scope.template = TemplateStorage.get({id: $scope.document.Id});
+        $scope.fields = TemplateStorage.getAll();
+    })
+
+.controller('TemplateEditorCtrl', function TemplateEditorCtrl($scope, TemplateStorage, $routeParams){
+        $scope.templates = TemplateStorage.getAll();
+        $scope.template = TemplateStorage.get({id: $scope.document.Id});
+        $scope.fields = TemplateStorage.getAll();
     });
