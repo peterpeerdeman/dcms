@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 
 src/github.com
+src/dcms
+
+.idea
+*.iml
+
+*~
