@@ -24,7 +24,6 @@ const (
 type message struct {
 	op opCode
 	id string
-	loc string
 	value Document
 	resp chan interface{}
 }
@@ -49,7 +48,7 @@ func DocumentProcessor(messageChannel chan message) {
 			case opUpdate:
 				documents[msg.id] = msg.value
 			case opDelete:
-				delete(documents, msg.loc)
+				delete(documents, msg.id)
 			}
 		}
 	}
