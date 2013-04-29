@@ -17,7 +17,7 @@
     <h1>Document overview</h1>
     <ul>
         <li ng-repeat="document in documents">
-            <a href="#/{{document.Id}}">{{document.Name}}</a>
+            <a href="#/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}}</a>
         </li>
     </ul>
 </section>
