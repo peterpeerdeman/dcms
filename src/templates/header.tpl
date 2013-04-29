@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="dcms">
   <head>
     <meta charset="utf-8">
     <title>Bootstrap, from Twitter</title>

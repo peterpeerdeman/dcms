@@ -1,0 +1,14 @@
+detail page for {{documentId}}<br/>
+<p>Id: {{document.Id}}</p>
+<p>Name: {{document.Name}}</p>
+
+
+<form name="editForm" id="edit-form">
+    <input id="name" placeholder="Title" ng-model="document.Name">
+    <input id="documentId" ng-model="document.Id" type="hidden">
+    <!--<p ng-show="!newSubTitle.length || !newTitle.length">Please fill in all fields</p>-->
+    <button ng-click="editDocument()">Edit</button>
+    <button ng-click="deleteDocument()">Delete</button>
+</form>
+
+        {{documents}}
