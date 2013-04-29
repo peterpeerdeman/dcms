@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/alle.veenstra/godb"
+	"github.com/alleveenstra/godb"
 	"github.com/gorilla/mux"
 	"github.com/ziutek/mymysql/autorc"
 	"html/template"
@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"resty"
 	"runtime/debug"
 )
 
@@ -49,7 +50,12 @@ func main() {
 
 	router.HandleFunc("/", HomeHandler)
 
-	router.HandleFunc("/rest/query", RestAllHandler).Methods("GET")
+	resty.Init()
+	router.HandleFunc("/rest/content", resty.AllContent).Methods("GET")
+	router.HandleFunc("/rest/content", resty.PostContent).Methods("POST")
+	router.HandleFunc("/rest/content/{id}", resty.GetContent).Methods("GET")
+	router.HandleFunc("/rest/content/{id}", resty.PutContent).Methods("PUT")
+	router.HandleFunc("/rest/content/{id}", resty.DeleteContent).Methods("DELETE")
 
 	http.Handle("/", router)
 	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./assets"))))
@@ -65,27 +71,6 @@ func HomeHandler(response http.ResponseWriter, request *http.Request) {
 	if HttpError(tmplErr, response) {
 		return
 	}
-}
-
-type Something struct {
-}
-
-func RestAllHandler(response http.ResponseWriter, request *http.Request) {
-	result, getErr := godb.SqlAll("SELECT * FROM something")
-	if HttpError(getErr, response) {
-		return
-	}
-	data := make([]Something, len(result.Rows))
-	errUnm := godb.Unmarshal(data, result)
-	if HttpError(errUnm, response) {
-		return
-	}
-	out, jsonErr := json.Marshal(data)
-	if HttpError(jsonErr, response) {
-		return
-	}
-	response.Header().Set("Content-Type", "application/json")
-	response.Write(out)
 }
 
 func HttpError(err error, response http.ResponseWriter) bool {
