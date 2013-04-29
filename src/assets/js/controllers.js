@@ -8,6 +8,7 @@ angular.module('dcms.controllers', [])
 
         $scope.newName = '';
         $scope.documents = DocumentStorage.query();
+        $scope.documentType = '';
 
         $scope.addDocument = function () {
             if (!$scope.newName.length) {
@@ -22,7 +23,8 @@ angular.module('dcms.controllers', [])
 
     .controller('DocumentDetailCtrl', function DocumentDetailCtrl($scope, $routeParams, DocumentStorage, $location) {
 
-        $scope.template = [{'name':'title1', 'type':'Text'},{'name':'title2', 'type':'Text'}];
+        $scope.nieuwsTemplate = [{'name':'title', 'type':'Text'},{'name':'subtitle', 'type':'Text'}];
+        $scope.persoonTemplate = [{'name':'title', 'type':'Text'},{'name':'age', 'type':'Text'}];
 
 
         $scope.documents = DocumentStorage.query();
@@ -37,4 +39,8 @@ angular.module('dcms.controllers', [])
             $scope.document.$delete({id: $scope.document.Id});
             $location.url('/');
         }
+    })
+
+    .controller('TemplateEditorCtrl', function TemplateEditorCtrl($scope){
+        $scope.test = 'test123';
     });

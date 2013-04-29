@@ -1,10 +1,14 @@
 {{documents}}
 
         {{newName}}
-
+<a href="#/templateEditor">Template Editor</a>
 <section class="creator">
     <h1>Document creator</h1>
-
+    <select ng-model="documentType">
+        <option></option>
+        <option value="nieuwsbericht">Nieuwsdocument</option>
+        <option value="persoon">Persoon</option>
+    </select>
     <form name="documentForm" id="document-form" ng-submit="addDocument()">
         <input id="name" placeholder="Name" ng-model="newName" required>
         <!--<input id="new-document" placeholder="Subtitle" ng-model="newSubTitle">-->
@@ -17,7 +21,10 @@
     <h1>Document overview</h1>
     <ul>
         <li ng-repeat="document in documents">
-            <a href="#/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}}</a>
+            <a href="#/document/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}}</a>
         </li>
     </ul>
 </section>
+
+
+        {{documentType}}

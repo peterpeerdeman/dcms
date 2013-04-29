@@ -7,9 +7,9 @@ detail page for {{documentId}}<br/>
     <input id="name" placeholder="Title" ng-model="document.Name">
     <input id="documentId" ng-model="document.Id" type="hidden">
 
-    <div ng-repeat="field in template">
-        <!--<p>{{field.name}}:</p>-->
-        <input placeholder="{{field.name}}" type="{{field.type}}"><br/>
+    <div ng-repeat="field in nieuwsTemplate">
+        <p>{{field.name}}</p>
+        <input ng-model="document.Fields[field.name]" placeholder="{{field.name}}" type="{{field.type}}"><br/>
     </div>
 
     <button ng-click="editDocument()">Edit</button>
