@@ -22,6 +22,9 @@ angular.module('dcms.controllers', [])
 
     .controller('DocumentDetailCtrl', function DocumentDetailCtrl($scope, $routeParams, DocumentStorage, $location) {
 
+        $scope.template = [{'name':'title1', 'type':'Text'},{'name':'title2', 'type':'Text'}];
+
+
         $scope.documents = DocumentStorage.query();
         $scope.document = DocumentStorage.get({id: $routeParams.Id});
 
