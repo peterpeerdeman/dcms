@@ -1,6 +1,7 @@
 dcms
 ====
 
+```bash
 set GOPATH="d:\Git\Projects\dcms"
 
 go get github.com/alleveenstra/godb
@@ -15,3 +16,4 @@ go run dcms.go
 go build dcms.go
 ./dcms.exe
 
+```
