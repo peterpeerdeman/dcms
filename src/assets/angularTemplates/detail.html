@@ -6,10 +6,16 @@ detail page for {{documentId}}<br/>
 <form name="editForm" id="edit-form">
     <input id="name" placeholder="Title" ng-model="document.Name">
     <input id="documentId" ng-model="document.Id" type="hidden">
-    <!--<p ng-show="!newSubTitle.length || !newTitle.length">Please fill in all fields</p>-->
+
+    <div ng-repeat="field in template">
+        <!--<p>{{field.name}}:</p>-->
+        <input placeholder="{{field.name}}" type="{{field.type}}"><br/>
+    </div>
+
     <button ng-click="editDocument()">Edit</button>
     <button ng-click="deleteDocument()">Delete</button>
 </form>
 
-<documentFields></documentFields>
+{{document.Fields}}
+
         {{documents}}

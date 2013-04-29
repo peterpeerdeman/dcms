@@ -4,9 +4,10 @@
 
 var app = angular.module('dcms.directives', []);
 app.directive('documentFields', function() {
-        alert('ss');
     return {
-        restrict:'E',
-        template:'<div>ladida</div>'
-    }
-  });
+        restrict:'C',
+        template:
+            '<input id="name" placeholder="Title" ng-model="document.Name">'+
+            '<input id="documentId" ng-model="document.Id" type="hidden">'
+    };
+});
