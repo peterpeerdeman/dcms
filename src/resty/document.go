@@ -24,12 +24,9 @@ const (
 type message struct {
 	op opCode
 	id string
+	loc string
 	value Document
 	resp chan interface{}
-}
-
-type contentResponse struct {
-	Id string
 }
 
 func DocumentProcessor(messageChannel chan message) {
@@ -48,19 +45,30 @@ func DocumentProcessor(messageChannel chan message) {
 			case opRead:
 				msg.resp <- documents[msg.id]
 			case opReadAll:
-				msg.resp <- documents
+				msg.resp <- map2slice(documents)
 			case opUpdate:
 				documents[msg.id] = msg.value
 			case opDelete:
-				delete(documents, msg.id)
+				delete(documents, msg.loc)
 			}
 		}
 	}
 }
 
+func map2slice(m map[string] Document) []Document {
+	v := make([]Document, len(m))
+	idx := 0
+	for _, value := range m {
+		v[idx] = value
+		idx++
+	}
+	return v
+}
+
 type Document struct {
+	Id string
 	Name string
-	Fields []string
+	Fields map[string] string
 }
 
 var messageChannel chan message
@@ -110,9 +118,13 @@ func PutDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
+	content.Id = id
 	readChan := make(chan interface{})
 	msg := message{op: opUpdate, id: id, value: content, resp: readChan}
 	messageChannel <- msg
+	response.Header().Set("Document-Type", "application/json")
+	out, _ := json.Marshal(content)
+	response.Write(out)
 }
 
 func PostDocument(response http.ResponseWriter, request *http.Request) {
@@ -126,15 +138,12 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	id := sha1sum(content)
+	content.Id = id
 	readChan := make(chan interface{})
 	msg := message{op: opCreate, id: id, value: content, resp: readChan}
 	messageChannel <- msg
-	var resp struct{
-		Id string
-	}
-	resp.Id = id
 	response.Header().Set("Document-Type", "application/json")
-	out, _ := json.Marshal(resp)
+	out, _ := json.Marshal(content)
 	response.Write(out)
 }
 
