@@ -22,17 +22,19 @@ angular.module('dcms.controllers', [])
         };
     })
 
-    .controller('DocumentDetailCtrl', function DocumentDetailCtrl($scope, $routeParams, DocumentStorage) {
+    .controller('DocumentDetailCtrl', function DocumentDetailCtrl($scope, $routeParams, DocumentStorage, $location) {
 
         $scope.documents = DocumentStorage.query();
         $scope.document = DocumentStorage.get({id: $routeParams.Id});
 
         $scope.editDocument = function(){
             $scope.document.$update({id: $scope.document.Id});
+            $location.url('/');
         };
 
         $scope.deleteDocument = function(){
             $scope.document.$delete({id: $scope.document.Id});
+            $location.url('/');
         }
     });
 

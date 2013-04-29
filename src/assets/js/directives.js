@@ -2,10 +2,11 @@
 
 /* Directives */
 
-
-angular.module('dcms.directives', []).
-  directive('appVersion', ['version', function(version) {
-    return function(scope, elm, attrs) {
-      elm.text(version);
-    };
-  }]);
+var app = angular.module('dcms.directives', []);
+app.directive('documentFields', function() {
+        alert('ss');
+    return {
+        restrict:'E',
+        template:'<div>ladida</div>'
+    }
+  });
