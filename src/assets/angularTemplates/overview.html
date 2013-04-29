@@ -2,20 +2,9 @@
 
         {{newName}}
 <a href="#/templateEditor">Template Editor</a>
-<section class="creator">
-    <h1>Document creator</h1>
-    <select ng-model="documentType">
-        <option></option>
-        <option value="nieuwsbericht">Nieuwsdocument</option>
-        <option value="persoon">Persoon</option>
-    </select>
-    <form name="documentForm" id="document-form" ng-submit="addDocument()">
-        <input id="name" placeholder="Name" ng-model="newName" required>
-        <!--<input id="new-document" placeholder="Subtitle" ng-model="newSubTitle">-->
-        <p ng-show="!newName.length">Please fill in all fields</p>
-        <button class="btn btn-primary btn-large" ng-disabled="documentForm.$invalid">Add</button>
-    </form>
-</section>
+
+<a href="#/document/create">Create a document</a>
+
 
 <section class="overview">
     <h1>Document overview</h1>
