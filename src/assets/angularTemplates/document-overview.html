@@ -1,19 +1,17 @@
-{{documents}}
+<h1>Document overview</h1>
 
-        {{newName}}
-<a href="#/templateEditor">Template Editor</a>
+<h2>Actions</h2>
 
-<a href="#/document/new">Create a document</a>
+<ul class="menu">
+ <li><a class="btn" href="#/document/new">Create a document</a></li>
+</ul>
 
+<h2>Documents</h2>
 
 <section class="overview">
-    <h1>Document overview</h1>
     <ul>
         <li ng-repeat="document in documents">
             <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}}</a>
         </li>
     </ul>
 </section>
-
-
-        {{documentType}}

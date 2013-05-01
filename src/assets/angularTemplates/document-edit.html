@@ -1,8 +1,10 @@
+<h1>Edit document {{document.Name}}</h1>
+
 detail page for {{documentId}}<br/>
 <p>Id: {{document.Id}}</p>
 <p>Name: {{document.Name}}</p>
 
-<form name="editForm" id="edit-form">
+<form class="form" name="editForm" id="edit-form">
     <input id="name" placeholder="Title" ng-model="document.Name">
     <input id="documentId" ng-model="document.Id" type="hidden">
 

@@ -4,6 +4,11 @@
 
 angular.module('dcms.controllers', [])
 
+    .controller('DashboardCtrl', function DashboardCtrl($scope) {
+        // empty?
+    })
+
+
     .controller('OverviewCtrl', function OverviewCtrl($scope, DocumentStorage) {
 
         $scope.newName = '';
