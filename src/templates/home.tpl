@@ -2,12 +2,12 @@
 
 <div class="container">
 
-    <ul class="header top menu">
-        <a href="#/">Dashboard</a>
-        <a href="#/document/overview">Documents</a>
-        <a href="#/template/overview">Templates</a>
-        <a href="#/pages/overview">Pages</a>
-        <a href="#/sitemap/overview">Sitemap</a>
+    <ul class="nav nav-pills">
+        <li><a href="#/">Dashboard</a></li>
+        <li><a href="#/document/overview">Documents</a></li>
+        <li><a href="#/template/overview">Templates</a></li>
+        <li><a href="#/pages/overview">Pages</a></li>
+        <li><a href="#/sitemap/overview">Sitemap</a></li>
     </ul>
 
     <div ng-view></div>
