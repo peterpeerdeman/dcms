@@ -57,6 +57,6 @@ angular.module('dcms.controllers', [])
         }
     })
 
-    .controller('TemplateEditorCtrl', function TemplateEditorCtrl($scope){
+    .controller('TemplateOverviewCtrl', function TemplateOverviewCtrl($scope){
         $scope.test = 'test123';
     });

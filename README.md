@@ -17,3 +17,12 @@ go build dcms.go
 ./dcms.exe
 
 ```
+
+* sitemap (couples pages to URLs)
+* template
+* pages (couples template to document)
+* channel (couples sitemap to tree and document version)
+* tree (contains documents)
+* document
+* document-type (property of document)
+* document-version

@@ -1,13 +1,23 @@
 <h1>Create new document</h1>
 
-<form class="form" name="editForm" id="edit-form">
-    <input id="name" placeholder="Title" ng-model="document.Name">
+<form class="form-horizontal" name="editForm" id="edit-form">
 
-    <select ng-model="documentType">
-        <option></option>
-        <option value="nieuwsbericht">Nieuwsdocument</option>
-        <option value="persoon">Persoon</option>
-    </select>
+    <div class="control-group">
+        <label class="control-label" for="name">Name</label>
+        <div class="controls">
+            <input id="name" placeholder="Title" ng-model="document.Name">
+        </div>
+    </div>
 
-    <button ng-click="createDocument()">Create</button>
+    <div class="control-group">
+        <label class="control-label" for="type">Type</label>
+        <div class="controls">
+            <select id="type" ng-model="documentType">
+                <option></option>
+                <option value="nieuwsbericht">Nieuwsdocument</option>
+                <option value="persoon">Persoon</option>
+            </select>
+            <button class="btn btn-primary" ng-click="createDocument()">Create</button>
+        </div>
+    </div>
 </form>
