@@ -1,0 +1,12 @@
+
+<form name="editForm" id="edit-form">
+    <input id="name" placeholder="Title" ng-model="document.Name">
+
+    <select ng-model="documentType">
+        <option></option>
+        <option value="nieuwsbericht">Nieuwsdocument</option>
+        <option value="persoon">Persoon</option>
+    </select>
+
+    <button ng-click="createDocument()">Create</button>
+</form>

@@ -21,9 +21,18 @@ angular.module('dcms.controllers', [])
         };
     })
 
-    .controller('DocumentDetailCtrl', function DocumentDetailCtrl($scope, $routeParams, DocumentStorage, $location) {
+    .controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $routeParams, DocumentStorage, $location) {
 
-        $scope.createMode = $routeParams.Id == 'create';
+        $scope.document = {"Name": ""};
+
+        $scope.createDocument = function() {
+            DocumentStorage.save($scope.document, function (d) {
+                $location.url('/document/edit/' + d.Id);
+            });
+        }
+    })
+
+    .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location) {
 
         $scope.nieuwsTemplate = [{'name':'title', 'type':'Text'},{'name':'subtitle', 'type':'Text'}];
         $scope.persoonTemplate = [{'name':'title', 'type':'Text'},{'name':'age', 'type':'Text'}];
@@ -36,12 +45,6 @@ angular.module('dcms.controllers', [])
             $scope.document.$update({id: $scope.document.Id});
             $location.url('/');
         };
-
-        $scope.createDocument = function() {
-            DocumentStorage.save($scope.document, function (d) {
-                $location.url('/document/' + d.Id);
-            });
-        }
 
         $scope.deleteDocument = function() {
             $scope.document.$delete({id: $scope.document.Id});

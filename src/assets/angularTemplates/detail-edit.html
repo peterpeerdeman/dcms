@@ -6,19 +6,12 @@ detail page for {{documentId}}<br/>
     <input id="name" placeholder="Title" ng-model="document.Name">
     <input id="documentId" ng-model="document.Id" type="hidden">
 
-    <div ng-show="!createMode" ng-repeat="field in nieuwsTemplate">
+    <div ng-repeat="field in nieuwsTemplate">
         <p>{{field.name}}</p>
         <input ng-model="document.Fields[field.name]" placeholder="{{field.name}}" type="{{field.type}}"><br/>
     </div>
 
-    <select ng-show="createMode" ng-model="documentType">
-        <option></option>
-        <option value="nieuwsbericht">Nieuwsdocument</option>
-        <option value="persoon">Persoon</option>
-    </select>
-
-    <button ng-click="editDocument()" ng-show="!createMode">Save</button>
-    <button ng-click="createDocument()" ng-show="createMode">Create</button>
+    <button ng-click="editDocument()">Save</button>
     <button ng-click="deleteDocument()">Delete</button>
 </form>
 
