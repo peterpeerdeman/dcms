@@ -4,6 +4,11 @@
 
 angular.module('dcms.controllers', [])
 
+    .controller('DashboardCtrl', function DashboardCtrl($scope) {
+        // empty?
+    })
+
+
     .controller('OverviewCtrl', function OverviewCtrl($scope, DocumentStorage) {
 
         $scope.newName = '';
@@ -21,9 +26,18 @@ angular.module('dcms.controllers', [])
         };
     })
 
-    .controller('DocumentDetailCtrl', function DocumentDetailCtrl($scope, $routeParams, DocumentStorage, $location) {
+    .controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $routeParams, DocumentStorage, $location) {
 
-        $scope.createMode = $routeParams.Id == 'create';
+        $scope.document = {"Name": ""};
+
+        $scope.createDocument = function() {
+            DocumentStorage.save($scope.document, function (d) {
+                $location.url('/document/edit/' + d.Id);
+            });
+        }
+    })
+
+    .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location) {
 
         $scope.nieuwsTemplate = [{'name':'title', 'type':'Text'},{'name':'subtitle', 'type':'Text'}];
         $scope.persoonTemplate = [{'name':'title', 'type':'Text'},{'name':'age', 'type':'Text'}];
@@ -37,26 +51,12 @@ angular.module('dcms.controllers', [])
             $location.url('/');
         };
 
-        $scope.createDocument = function() {
-            DocumentStorage.save($scope.document, function (d) {
-                $location.url('/document/' + d.Id);
-            });
-        }
-
         $scope.deleteDocument = function() {
             $scope.document.$delete({id: $scope.document.Id});
             $location.url('/');
         }
     })
 
-    .controller('TemplateOverviewCtrl', function TemplateOverviewCtrl($scope, TemplateStorage, $routeParams){
-        $scope.templates = TemplateStorage.getAll();
-        $scope.template = TemplateStorage.get({id: $scope.document.Id});
-        $scope.fields = TemplateStorage.getAll();
-    })
-
-.controller('TemplateEditorCtrl', function TemplateEditorCtrl($scope, TemplateStorage, $routeParams){
-        $scope.templates = TemplateStorage.getAll();
-        $scope.template = TemplateStorage.get({id: $scope.document.Id});
-        $scope.fields = TemplateStorage.getAll();
+    .controller('TemplateOverviewCtrl', function TemplateOverviewCtrl($scope){
+        $scope.test = 'test123';
     });

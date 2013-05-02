@@ -1,0 +1,13 @@
+<h1>Document overview</h1>
+
+<a class="btn btn-primary" href="#/document/new">Create a document</a>
+
+<h2>Documents</h2>
+
+<section class="overview">
+    <ul>
+        <li ng-repeat="document in documents">
+            <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}}</a>
+        </li>
+    </ul>
+</section>

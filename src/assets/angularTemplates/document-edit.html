@@ -1,0 +1,36 @@
+<h1>Edit document {{document.Name}}</h1>
+
+detail page for {{documentId}}<br/>
+<p>Id: {{document.Id}}</p>
+<p>Name: {{document.Name}}</p>
+
+<form class="form-horizontal" name="editForm" id="edit-form">
+    <input id="documentId" ng-model="document.Id" type="hidden">
+
+    <div class="control-group">
+        <label class="control-label" for="name">Name</label>
+        <div class="controls">
+            <input id="name" placeholder="Title" ng-model="document.Name">
+        </div>
+    </div>
+
+    <div class="control-group" ng-repeat="field in nieuwsTemplate">
+        <label class="control-label">{{field.name}}</label>
+        <div class="controls">
+            <input ng-model="document.Fields[field.name]" placeholder="{{field.name}}" type="{{field.type}}"><br/>
+        </div>
+    </div>
+
+
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-primary" ng-click="editDocument()">Save</button>
+            <button type="submit" class="btn btn-warning" ng-click="deleteDocument()">Delete</button>
+        </div>
+    </div>
+
+</form>
+
+{{document.Fields}}
+
+{{documents}}
