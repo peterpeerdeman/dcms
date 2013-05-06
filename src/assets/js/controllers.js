@@ -8,7 +8,6 @@ angular.module('dcms.controllers', [])
         // empty?
     })
 
-
     .controller('DocumentOverviewCtrl', function OverviewCtrl($scope, DocumentStorage) {
 
         $scope.newName = '';
@@ -40,10 +39,6 @@ angular.module('dcms.controllers', [])
     })
 
     .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
-
-        $scope.nieuwsTemplate = [{'name':'title', 'type':'Text'},{'name':'subtitle', 'type':'Text'}];
-        $scope.persoonTemplate = [{'name':'title', 'type':'Text'},{'name':'age', 'type':'Text'}];
-
         $scope.documents = DocumentStorage.query();
         $scope.document = DocumentStorage.get({id: $routeParams.Id}, function () {
             $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type});
@@ -65,10 +60,7 @@ angular.module('dcms.controllers', [])
         $scope.templates = TemplateStorage.get();
     })
 
-
-
     .controller('DocumentTypeOverviewCtrl', function OverviewCtrl($scope, DocumentTypeStorage) {
-
         $scope.newName = '';
         $scope.documentTypes = DocumentTypeStorage.query();
         $scope.documentType = '';
@@ -95,7 +87,6 @@ angular.module('dcms.controllers', [])
     })
 
     .controller('EditDocumentTypeCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentTypeStorage, $location, $compile) {
-
         $scope.documentTypes = DocumentTypeStorage.query();
         $scope.documentType = DocumentTypeStorage.get({id: $routeParams.Id});
         $scope.newDocumentField = {};
@@ -112,9 +103,8 @@ angular.module('dcms.controllers', [])
         $scope.saveDocumentType = function() {
             $scope.documentType.$update({id: $scope.documentType.Id});
         };
-
-//        $scope.deleteDocumentType = function() {
-//            $scope.documentType.$delete({id: $scope.documentType.Id});
-//            $location.url('/');
-//        }
+        $scope.removeField = function(field) {
+            var index = $scope.documentType.Fields.indexOf(field);
+            $scope.documentType.Fields.splice(index,1);
+        };
     });
