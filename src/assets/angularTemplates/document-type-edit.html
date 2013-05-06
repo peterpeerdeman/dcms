@@ -2,18 +2,20 @@
 
 <ul ui-sortable ng-model="documentType.Fields">
     <li class="control-group" ng-repeat="field in documentType.Fields">
-        <div ng-switch="field.Type">
+        <div ng-switch="field.Type" class="form-horizontal">
             <div ng-switch-when="string">
                 Name: {{field.Name}}
                 Min: {{field.Min}}
                 Max: {{field.Max}}
-                <string></string>
+                <input type="text" disabled>
+                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
             </div>
             <div ng-switch-when="textarea">
                 Name: {{field.Name}}
                 Min: {{field.Min}}
                 Max: {{field.Max}}
-                <textarea rows="10" cols="10"></textarea>
+                <textarea rows="10" cols="10" disabled></textarea>
+                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
             </div>
         </div>
     </li>

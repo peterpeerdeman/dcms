@@ -5,7 +5,6 @@ detail page for {{documentId}}<br/>
 <p>Name: {{document.Name}}</p>
 
 <form class="form-horizontal" name="editForm" id="edit-form">
-    <input id="documentId" ng-model="document.Id" type="hidden">
 
     <div class="control-group">
         <label class="control-label" for="name">Name</label>
@@ -14,13 +13,18 @@ detail page for {{documentId}}<br/>
         </div>
     </div>
 
-    <div class="control-group" ng-repeat="field in nieuwsTemplate">
-        <label class="control-label">{{field.name}}</label>
-        <div class="controls">
-            <input ng-model="document.Fields[field.name]" placeholder="{{field.name}}" type="{{field.type}}"><br/>
+    <div class="control-group" ng-repeat="field in documentType.Fields">
+        <label class="control-label">{{field.Name}}</label>
+
+        <div class="controls" ng-switch="field.Type">
+            <div ng-switch-when="string">
+                <input ng-model="document.Fields[field.Name]" placeholder="{{field.Name}}" type="text">
+            </div>
+            <div ng-switch-when="textarea">
+                <textarea ng-model="document.Fields[field.Name]" placeholder="{{field.Name}}" cols="10"></textarea>
+            </div>
         </div>
     </div>
-
 
     <div class="control-group">
         <div class="controls">
@@ -30,7 +34,3 @@ detail page for {{documentId}}<br/>
     </div>
 
 </form>
-<!--{{document}}-->
-{{documentType}}
-
-<!--{{documents}}-->
