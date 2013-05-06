@@ -5,9 +5,21 @@
 <h2>Documents</h2>
 
 <section class="overview">
+
+    <form class="form-inline">
+        <input ng-model="query" id="inputSearch" class="input-medium search-query" placeholder="Search">
+
+        <select id="order" ng-model="orderProp">
+            <option value="Name">Alphabetical</option>
+            <option value="Type">Type</option>
+            <option value="Id">Id</option>
+        </select>
+
+    </form>
+
     <ul>
-        <li ng-repeat="document in documents">
-            <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}}</a>
+        <li ng-repeat="document in documents | filter:query | orderBy:orderProp">
+            <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}} {{document.Type}}</a>
         </li>
     </ul>
 </section>

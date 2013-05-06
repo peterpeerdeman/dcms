@@ -1,0 +1,12 @@
+<h1>Edit document type {{document.Name}}</h1>
+
+<form class="form-horizontal">
+    <select id="type" ng-model="documentType.Type">
+        <option></option>
+        <option value="string">String</option>
+        <option value="textarea">Text area</option>
+    </select>
+    <button type="submit" class="btn btn-primary" ng-click="addField()">Add</button>
+</form>
+
+        <div id="fields"></div>

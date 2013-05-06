@@ -1,1 +1,27 @@
 <h1>Document-type overview</h1>
+
+<a class="btn btn-primary" href="#/document-type/new">Create a document type</a>
+
+<h2>Document types</h2>
+
+<section class="overview">
+
+    <!--<form class="form-inline">-->
+        <!--<input ng-model="query" id="inputSearch" class="input-medium search-query" placeholder="Search">-->
+
+        <!--<select id="order" ng-model="orderProp">-->
+            <!--<option value="Name">Alphabetical</option>-->
+            <!--<option value="Type">Type</option>-->
+            <!--<option value="Id">Id</option>-->
+        <!--</select>-->
+
+    <!--</form>-->
+
+    <ul>
+        <li ng-repeat="documentType in documentTypes | filter:query | orderBy:orderProp">
+            <a href="#/document/edit/{{documentType.Id}}">{{document.Id}} {{document.Path}} {{document.Name}} {{document.Type}}</a>
+        </li>
+    </ul>
+</section>
+
+
