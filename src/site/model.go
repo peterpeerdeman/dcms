@@ -10,9 +10,11 @@ type Template struct {
 }
 
 type Page struct {
-	Template  string
-	Component string
-	SubPages  map[string] Page
+	Template    string
+	Component   string
+	ContentPath string
+	Variables map[string] string
+	SubPages map[string] Page
 }
 
 type Component struct {
@@ -24,7 +26,7 @@ type Sitemap struct {
 }
 
 type Channel struct {
-	Sitemap  Sitemap
+	Sitemap Sitemap
 	Variables map[string] string
 	Components map[string] Component
 	Templates map[string] Template

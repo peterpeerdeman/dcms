@@ -3,12 +3,13 @@
         "localhost:8080": {
             "Sitemap": {
                 "Mapping": {
-                    "/test123.html": {
+                    "\\/news\\/(?P<documentName>.*)": {
                         "Variables": {
                             "var2": "page variable"
                         },
                         "Template": "test-template",
                         "Component": "test-component",
+                        "ContentPath": "/documents/news/{documentName}.html",
                         "SubPages": {
                             "aapje": {
                                 "Template": "news-template",
