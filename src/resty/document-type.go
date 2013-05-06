@@ -52,6 +52,7 @@ func PostDocumentType(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
+	tmp.Fields = make([]documentTypeField, 0)
 	tmp.Id = sha1sum(tmp)
 	documentTypes[tmp.Id] = tmp
 	out, jsonErr := json.Marshal(tmp)

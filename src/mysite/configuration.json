@@ -1,0 +1,21 @@
+{
+    "Channels": {
+        "localhost:8080": {
+            "Sitemap": {
+                "Mapping": {
+                    "/test123.html": {
+                        "Template": {
+                            "Filename": "test-template.tpl"
+                        },
+                        "Component": {
+                            "ObjectName": "mysite.TestComponent"
+                        }
+                    }
+                }
+            },
+            "Variables": {
+                "var1": "value1"
+            }
+        }
+    }
+}
