@@ -6,5 +6,5 @@ func Init() {
 	messageChannel = make(chan message)
 	go DocumentProcessor(messageChannel)
 
-	templates = make(map[string] template)
+	documentTypes = make(map[string] documentType)
 }

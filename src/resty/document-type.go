@@ -8,7 +8,6 @@ import (
 )
 
 type documentTypeField struct {
-	Id   string
 	Name string
 	Type string
 	Max  int
@@ -70,7 +69,7 @@ func PutDocumentType(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	var tmp documentTypes
+	var tmp documentType
 	jsonErr := json.Unmarshal(bodyBytes, &tmp)
 	if RestError(jsonErr, response) {
 		return

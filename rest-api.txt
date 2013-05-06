@@ -15,14 +15,12 @@ DELETE  /rest/document-type/{id}     delete a template
 	"Name": "Nieuwsbericht",
 	"Fields": [
         {
-        	"Id": "mdi3490opfg8ewo6",
         	"Name": "Mijn gekke titel",
         	"Type": "string",
         	"Max": 1,
         	"Min": 1
         },
         {
-        	"Id": "alds345invaoith8",
         	"Name": "Mijn content",
         	"Type": "html",
         	"Max": 3,
