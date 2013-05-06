@@ -19,10 +19,10 @@
                 }
             },
             "Components": {
-                "testComponent": {
+                "test-component": {
                     "ObjectName": "mysite.TestComponent"
                 },
-                "newsComponent": {
+                "news-component": {
                     "ObjectName": "mysite.NewsComponent"
                 }
             },

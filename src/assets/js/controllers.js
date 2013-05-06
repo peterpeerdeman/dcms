@@ -45,8 +45,9 @@ angular.module('dcms.controllers', [])
         $scope.persoonTemplate = [{'name':'title', 'type':'Text'},{'name':'age', 'type':'Text'}];
 
         $scope.documents = DocumentStorage.query();
-        var document = $scope.document = DocumentStorage.get({id: $routeParams.Id});
-        $scope.documentType = DocumentTypeStorage.get({id: document.Type});
+        $scope.document = DocumentStorage.get({id: $routeParams.Id}, function () {
+            $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type});
+        });
 
         $scope.editDocument = function() {
             $scope.document.$update({id: $scope.document.Id});
