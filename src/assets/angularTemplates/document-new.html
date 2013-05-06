@@ -14,10 +14,11 @@
         <div class="controls">
             <select id="type" ng-model="document.Type">
                 <option></option>
-                <option value="nieuwsbericht">Nieuwsdocument</option>
-                <option value="persoon">Persoon</option>
+                <option ng-repeat="documentType in documentTypes" value="{{documentType.Id}}">{{documentType.Name}}</option>
             </select>
             <button class="btn btn-primary" ng-click="createDocument()">Create</button>
         </div>
     </div>
 </form>
+
+

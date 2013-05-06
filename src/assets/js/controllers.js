@@ -27,9 +27,10 @@ angular.module('dcms.controllers', [])
         };
     })
 
-    .controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $routeParams, DocumentStorage, $location) {
+    .controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
 
         $scope.document = {"Name": "", "Type": ""};
+        $scope.documentTypes = DocumentTypeStorage.get();
 
         $scope.createDocument = function() {
             DocumentStorage.save($scope.document, function (d) {
@@ -38,14 +39,14 @@ angular.module('dcms.controllers', [])
         }
     })
 
-    .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location) {
+    .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
 
         $scope.nieuwsTemplate = [{'name':'title', 'type':'Text'},{'name':'subtitle', 'type':'Text'}];
         $scope.persoonTemplate = [{'name':'title', 'type':'Text'},{'name':'age', 'type':'Text'}];
 
-
         $scope.documents = DocumentStorage.query();
-        $scope.document = DocumentStorage.get({id: $routeParams.Id});
+        var document = $scope.document = DocumentStorage.get({id: $routeParams.Id});
+        $scope.documentType = DocumentTypeStorage.get({id: document.Type});
 
         $scope.editDocument = function() {
             $scope.document.$update({id: $scope.document.Id});
@@ -87,7 +88,7 @@ angular.module('dcms.controllers', [])
 
         $scope.createDocumentType = function() {
             DocumentTypeStorage.save($scope.documentType, function (d) {
-                $location.url('/document-type/edit/');
+                $location.url('/document-type/edit/'  + d.Id);
             });
         }
     })
@@ -96,23 +97,23 @@ angular.module('dcms.controllers', [])
 
         $scope.documentTypes = DocumentTypeStorage.query();
         $scope.documentType = DocumentTypeStorage.get({id: $routeParams.Id});
+        $scope.newDocumentField = {};
 
         $scope.addField = function() {
-            console.log($scope.documentType.Type);
 
-            switch (type) {
-                case string:
-                    $compile('<string></string>')($scope).appendTo(document.getElementById('fields'))
-                    break;
-                case textarea:
-                    $compile('<textarea></textarea>')($scope).appendTo(document.getElementById('fields'));
-                    break;
+            if ($scope.documentType.Fields == null){
+                $scope.documentType.Fields = [];
             }
-            $compile('<string></string>')($scope).appendTo(document.getElementById('fields'));
+            $scope.documentType.Fields.push($scope.newDocumentField);
+            $scope.newDocumentField = {};
+        };
+
+        $scope.saveDocumentType = function() {
+            $scope.documentType.$update({id: $scope.documentType.Id});
         };
 
 //        $scope.deleteDocumentType = function() {
 //            $scope.documentType.$delete({id: $scope.documentType.Id});
 //            $location.url('/');
 //        }
-    })
+    });
