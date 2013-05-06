@@ -7,8 +7,10 @@ import (
 	"log"
 	"fmt"
 	"runtime/debug"
+	"mysite"
 	"os"
 	"errors"
+	"bytes"
 )
 
 func Site() {
@@ -39,14 +41,50 @@ func HandleAll(response http.ResponseWriter, request *http.Request) {
 }
 
 func (this *Page) Render(response http.ResponseWriter, request *http.Request, channel *Channel) {
-	var tmplVars struct {
-		Channel map[string] string
+	component_out := this.RenderComponent(response, request, channel)
+	response.Write([]byte(component_out))
+}
+
+func (this *Page) RenderComponent(response http.ResponseWriter, request *http.Request, channel *Channel) string {
+	vars := make(map[string] interface{})
+	for name, value := range channel.Variables {
+		vars[name] = value
 	}
-	tmplVars.Channel = channel.Variables
-	tmplErr := Render(response, this.Template.Filename, tmplVars)
-	if HttpError(tmplErr, response) {
-		return
+	if this.Component != "" {
+		component_id, component_id_found := channel.Components[this.Component]
+		if component_id_found {
+			component, component_found := mysite.Components[component_id.ObjectName]
+			if component_found {
+				output := component.Render(response, request)
+				for name, value := range output {
+					vars[name] = value
+				}
+				for name, subPage := range this.SubPages {
+					log.Printf("Rendering component %v", name)
+					vars[name] = subPage.RenderComponent(response, request, channel)
+				}
+				templateFile := channel.Templates[this.Template].Filename
+				t := template.New("bunch")
+				t.Funcs(template.FuncMap{"eq": reflect.DeepEqual})
+				_, parseErr := t.ParseFiles(fmt.Sprintf("mysite/templates/%s", templateFile))
+				if parseErr != nil {
+					 log.Fatalf("%v", parseErr)
+				}
+				buffer := bytes.NewBufferString("")
+				execErr := t.ExecuteTemplate(buffer, templateFile, vars)
+				if execErr != nil {
+					log.Fatalf("%v", execErr)
+				}
+				return string(buffer.Bytes())
+
+			} else {
+				log.Printf("Component %s not found in mysite", component_id.ObjectName)
+			}
+		} else {
+			log.Printf("Component name %s not found in configuration", this.Component)
+		}
 	}
+	return ""
 }
 
 func matches(pattern, str string) bool {

@@ -4,13 +4,34 @@
             "Sitemap": {
                 "Mapping": {
                     "/test123.html": {
-                        "Template": {
-                            "Filename": "test-template.tpl"
+                        "Variables": {
+                            "var2": "page variable"
                         },
-                        "Component": {
-                            "ObjectName": "mysite.TestComponent"
+                        "Template": "test-template",
+                        "Component": "test-component",
+                        "SubPages": {
+                            "aapje": {
+                                "Template": "news-template",
+                                "Component": "news-component"
+                            }
                         }
                     }
+                }
+            },
+            "Components": {
+                "testComponent": {
+                    "ObjectName": "mysite.TestComponent"
+                },
+                "newsComponent": {
+                    "ObjectName": "mysite.NewsComponent"
+                }
+            },
+            "Templates": {
+                "test-template": {
+                    "Filename": "test-template.tpl"
+                },
+                "news-template": {
+                    "Filename": "news-template.tpl"
                 }
             },
             "Variables": {

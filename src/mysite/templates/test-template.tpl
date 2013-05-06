@@ -1,3 +1,9 @@
 Yup, gelukt!
 
-        {{ .Channel.var1 }}
+        {{ .var1 }}
+
+        {{ .var3 }}
+
+        {{ .rand }}
+
+        {{ .aapje }}

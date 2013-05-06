@@ -10,8 +10,9 @@ type Template struct {
 }
 
 type Page struct {
-	Template  Template
-	Component Component
+	Template  string
+	Component string
+	SubPages  map[string] Page
 }
 
 type Component struct {
@@ -25,6 +26,8 @@ type Sitemap struct {
 type Channel struct {
 	Sitemap  Sitemap
 	Variables map[string] string
+	Components map[string] Component
+	Templates map[string] Template
 }
 
 var SiteConfiguration struct {
