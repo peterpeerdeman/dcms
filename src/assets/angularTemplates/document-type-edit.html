@@ -1,12 +1,47 @@
-<h1>Edit document type {{document.Name}}</h1>
+<h1 xmlns="">Edit document type: {{documentType.Name}}</h1>
 
-<form class="form-horizontal">
-    <select id="type" ng-model="documentType.Type">
+<ul ui-sortable ng-model="documentType.Fields">
+    <li class="control-group" ng-repeat="field in documentType.Fields">
+        <div ng-switch="field.Type">
+            <div ng-switch-when="string">
+                Name: {{field.Name}}
+                Min: {{field.Min}}
+                Max: {{field.Max}}
+                <string></string>
+            </div>
+            <div ng-switch-when="textarea">
+                Name: {{field.Name}}
+                Min: {{field.Min}}
+                Max: {{field.Max}}
+                <textarea rows="10" cols="10"></textarea>
+            </div>
+        </div>
+    </li>
+</ul>
+
+
+<form name="form" class="form-horizontal">
+    <input type="hidden" ng-model="documentType.Id">
+    <label for="name">Name</label>
+    <input id="name" type="text" ng-model="newDocumentField.Name" required>
+    <label for="type">Type</label>
+    <select id="type" ng-model="newDocumentField.Type" required>
         <option></option>
         <option value="string">String</option>
         <option value="textarea">Text area</option>
     </select>
-    <button type="submit" class="btn btn-primary" ng-click="addField()">Add</button>
+    <label for="min">Min</label>
+    <input id="min" type="number" ng-model="newDocumentField.Min" required>
+    <label for="max">Max</label>
+    <input id="max" type="number" ng-model="newDocumentField.Max" required>
+    <button type="submit" class="btn btn-primary" ng-click="addField()" ng-disabled="form.$invalid">Add</button>
 </form>
+<button type="submit" class="btn btn-primary" ng-click="saveDocumentType()">Save</button>
 
-        <div id="fields"></div>
+<div id="fields"></div>
+
+<!--<input ng-model="document.Fields[field.name]" placeholder="{{field.name}}" type="{{field.type}}"><br/>-->
+
+<!--{{fieldTemplate}}<br/>-->
+<!--{{fields}}-->
+{{documentType}}

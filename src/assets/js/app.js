@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dcms', ['dcms.filters', 'dcms.services', 'dcms.directives', 'dcms.controllers']).
+angular.module('dcms', ['dcms.filters', 'dcms.services', 'dcms.directives', 'dcms.controllers', 'ui']).
   config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.when('/', {templateUrl: '/cms/assets/angularTemplates/dashboard.html', controller: 'DashboardCtrl'});

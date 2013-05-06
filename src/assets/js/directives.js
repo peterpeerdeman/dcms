@@ -10,7 +10,7 @@ app.directive('documentFields', function() {
             '<input id="name" placeholder="Title" ng-model="document.Name">'+
             '<input id="documentId" ng-model="document.Id" type="hidden">'
     };
-})
+});
 
 app.directive('string', function () {
     return {
