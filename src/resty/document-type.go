@@ -7,23 +7,24 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type templateField struct {
-	Id string
+type documentTypeField struct {
+	Id   string
 	Name string
-	Class string
 	Type string
+	Max  int
+	Min  int
 }
 
-type template struct {
-	Id string
-	Name string
-	Fields []templateField
+type documentType struct {
+	Id     string
+	Name   string
+	Fields []documentTypeField
 }
 
-var templates map[string] template
+var documentTypes map[string] documentType
 
-func AllTemplates(response http.ResponseWriter, request *http.Request) {
-	out, jsonErr := json.Marshal(templates)
+func AllDocumentType(response http.ResponseWriter, request *http.Request) {
+	out, jsonErr := json.Marshal(documentTypes)
 	if RestError(jsonErr, response) {
 		return
 	}
@@ -31,10 +32,10 @@ func AllTemplates(response http.ResponseWriter, request *http.Request) {
 	response.Write(out)
 }
 
-func GetTemplate(response http.ResponseWriter, request *http.Request) {
+func GetDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, jsonErr := json.Marshal(templates[id])
+	out, jsonErr := json.Marshal(documentTypes[id])
 	if RestError(jsonErr, response) {
 		return
 	}
@@ -42,18 +43,18 @@ func GetTemplate(response http.ResponseWriter, request *http.Request) {
 	response.Write(out)
 }
 
-func PostTemplate(response http.ResponseWriter, request *http.Request) {
+func PostDocumentType(response http.ResponseWriter, request *http.Request) {
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
 	}
-	var tmp template
+	var tmp documentType
 	jsonErr := json.Unmarshal(bodyBytes, &tmp)
 	if RestError(jsonErr, response) {
 		return
 	}
 	tmp.Id = sha1sum(tmp)
-	templates[tmp.Id] = tmp
+	documentTypes[tmp.Id] = tmp
 	out, jsonErr := json.Marshal(tmp)
 	if RestError(jsonErr, response) {
 		return
@@ -62,20 +63,20 @@ func PostTemplate(response http.ResponseWriter, request *http.Request) {
 	response.Write(out)
 }
 
-func PutTemplate(response http.ResponseWriter, request *http.Request) {
+func PutDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
 	}
-	var tmp template
+	var tmp documentTypes
 	jsonErr := json.Unmarshal(bodyBytes, &tmp)
 	if RestError(jsonErr, response) {
 		return
 	}
 	tmp.Id = id
-	templates[id] = tmp
+	documentTypes[id] = tmp
 	out, jsonErr := json.Marshal(tmp)
 	if RestError(jsonErr, response) {
 		return
@@ -84,10 +85,10 @@ func PutTemplate(response http.ResponseWriter, request *http.Request) {
 	response.Write(out)
 }
 
-func DeleteTemplate(response http.ResponseWriter, request *http.Request) {
+func DeleteDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	delete(templates, id)
+	delete(documentTypes, id)
 }
 
 

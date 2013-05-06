@@ -19,11 +19,11 @@ func Cms() {
 	router.HandleFunc("/rest/document/{id}", PutDocument).Methods("PUT")
 	router.HandleFunc("/rest/document/{id}", DeleteDocument).Methods("DELETE")
 
-	router.HandleFunc("/rest/template", AllTemplates).Methods("GET")
-	router.HandleFunc("/rest/template", PostTemplate).Methods("POST")
-	router.HandleFunc("/rest/template/{id}", GetTemplate).Methods("GET")
-	router.HandleFunc("/rest/template/{id}", PutTemplate).Methods("PUT")
-	router.HandleFunc("/rest/template/{id}", DeleteTemplate).Methods("DELETE")
+	router.HandleFunc("/rest/document-type", AllDocumentType).Methods("GET")
+	router.HandleFunc("/rest/document-type", PostDocumentType).Methods("POST")
+	router.HandleFunc("/rest/document-type/{id}", GetDocumentType).Methods("GET")
+	router.HandleFunc("/rest/document-type/{id}", PutDocumentType).Methods("PUT")
+	router.HandleFunc("/rest/document-type/{id}", DeleteDocumentType).Methods("DELETE")
 
 	http.Handle("/rest/", router)
 }

@@ -4,8 +4,29 @@ GET     /rest/document/{id}     retrieve a document
 PUT     /rest/document/{id}     update a document's content, data without metadata
 DELETE  /rest/document/{id}     delete a document
 
-GET     /rest/template          retrieve all templates
-POST    /rest/template          create a new template
-GET     /rest/template/{id}     retrieve a template
-PUT     /rest/template/{id}     update a template
-DELETE  /rest/template/{id}     delete a template
+GET     /rest/document-type          retrieve all templates
+POST    /rest/document-type          create a new template
+GET     /rest/document-type/{id}     retrieve a template
+PUT     /rest/document-type/{id}     update a template
+DELETE  /rest/document-type/{id}     delete a template
+
+{
+	"Id": "uh3458gh1853",
+	"Name": "Nieuwsbericht",
+	"Fields": [
+        {
+        	"Id": "mdi3490opfg8ewo6",
+        	"Name": "Mijn gekke titel",
+        	"Type": "string",
+        	"Max": 1,
+        	"Min": 1
+        },
+        {
+        	"Id": "alds345invaoith8",
+        	"Name": "Mijn content",
+        	"Type": "html",
+        	"Max": 3,
+        	"Min": 1
+        }
+	]
+}
