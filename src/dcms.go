@@ -3,8 +3,6 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/alleveenstra/godb"
-	"github.com/ziutek/mymysql/autorc"
 	"io/ioutil"
 	"log"
 	"os"
@@ -23,7 +21,6 @@ var config struct {
 }
 
 func main() {
-
 	var configFile string
 	flag.StringVar(&configFile, "config", "config.json", "The configuration file.")
 	flag.Parse()
@@ -34,16 +31,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	if 1 == 2 {
-		godb.Database = autorc.New("tcp", "", config.SqlHostname, config.SqlUser, config.SqlPassword, config.SqlDatabase)
-		godb.Database.Register("SET NAMES utf8")
-	}
-
 	resty.Cms()
 	site.Site()
 
 	http.ListenAndServe(config.ListenAddress, nil)
-
 }
 
 func ReadConfiguration(configFile string) error {

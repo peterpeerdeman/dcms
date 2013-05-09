@@ -14,8 +14,7 @@ import (
 )
 
 func Site() {
-	readErr := ReadConfiguration("mysite/configuration.json")
-	Fatal(readErr)
+	go WatchConfiguration("mysite/configuration.json")
 	http.HandleFunc("/", HandleAll)
 	http.Handle("/assets/", http.StripPrefix("/mysite/assets", http.FileServer(http.Dir("./mysite/assets"))))
 }

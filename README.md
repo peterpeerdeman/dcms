@@ -4,11 +4,8 @@ dcms
 ```bash
 set GOPATH="d:\Git\Projects\dcms"
 
-go get github.com/alleveenstra/godb
 go get github.com/gorilla/mux
-go get github.com/zuitek/mymysql/autorc
-go get github.com/zuitek/mymysql/mysql
-go get github.com/zuitek/mymysql/native
+go get github.com/howeyc/fsnotify
 
 go install mysite
 go install site

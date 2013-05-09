@@ -1,0 +1,4 @@
+language: go
+install: make
+  - go get github.com/gorilla/mux
+  - go get github.com/howeyc/fsnotify
