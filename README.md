@@ -16,3 +16,6 @@ go build dcms.go
 ./dcms.exe
 
 ```
+
+
+[![Build Status](https://secure.travis-ci.org/alleveenstra/dcms.png?branch=master)](http://travis-ci.org/alleveenstra/dcms)
