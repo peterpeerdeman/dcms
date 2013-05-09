@@ -1,4 +1,9 @@
 language: go
-install: make
+install:
   - go get github.com/gorilla/mux
   - go get github.com/howeyc/fsnotify
+script:
+  - go install mysite
+  - go install site
+  - go install resty
+  - go build src/dcms.go
