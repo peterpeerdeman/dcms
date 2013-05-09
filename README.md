@@ -10,6 +10,8 @@ go get github.com/zuitek/mymysql/autorc
 go get github.com/zuitek/mymysql/mysql
 go get github.com/zuitek/mymysql/native
 
+go install mysite
+go install site
 go install resty
 go run dcms.go
 
@@ -17,12 +19,3 @@ go build dcms.go
 ./dcms.exe
 
 ```
-
-* sitemap (couples pages to URLs)
-* template
-* pages (couples template to document)
-* channel (couples sitemap to tree and document version)
-* tree (contains documents)
-* document
-* document-type (property of document)
-* document-version
