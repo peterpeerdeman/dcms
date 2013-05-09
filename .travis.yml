@@ -3,7 +3,7 @@ install:
   - go get github.com/gorilla/mux
   - go get github.com/howeyc/fsnotify
 script:
-  - go install mysite
-  - go install site
-  - go install resty
+  - go install alleveenstra/dcms/mysite
+  - go install alleveenstra/dcms/site
+  - go install alleveenstra/dcms/resty
   - go build src/dcms.go
