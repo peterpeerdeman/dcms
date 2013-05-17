@@ -1,6 +1,7 @@
 all:
 	go install mysite
 	go install site
+	go install storage
 	go install resty
 	go build src/dcms.go
 
