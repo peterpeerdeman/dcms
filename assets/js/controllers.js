@@ -43,12 +43,16 @@ angular.module('dcms.controllers', [])
         $scope.document = DocumentStorage.get({id: $routeParams.Id}, function () {
             $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type}, function () {
                 var fields = $scope.documentType.Fields;
-                for (var i = 0; i < fields.length; i++) {
+                for (var i = 0; i < fields.length; i++) { 
+                    var field = fields[i];
                     var subfields = [];
                     for (var subfield_index = 0; subfield_index < fields[i].Max; subfield_index++) {
                         subfields[subfield_index] = {"index": subfield_index, "required": subfield_index < fields[i].Min};
                     }
                     $scope.documentType.Fields[i].subfields = subfields;
+                    if ($scope.document.Fields[field.Name] == undefined) {
+                        $scope.document.Fields[field.Name] = new Array();
+                    } 
                 }
             });
         });
