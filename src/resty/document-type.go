@@ -1,10 +1,12 @@
 package resty
 
 import (
-	"net/http"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
 type documentTypeField struct {
@@ -20,10 +22,26 @@ type documentType struct {
 	Fields []documentTypeField
 }
 
-var documentTypes map[string] documentType
-
 func AllDocumentType(response http.ResponseWriter, request *http.Request) {
-	out, jsonErr := json.Marshal(documentTypes)
+	docs, listErr := Repo.List("/document-types")
+	if listErr != nil {
+		return
+	}
+	log.Printf("Listing %v", docs)
+	var resp []documentType
+	for _, file := range docs {
+		data, getErr := Repo.Get(fmt.Sprintf("/document-types/%s", file))
+		if getErr == nil {
+			var doc documentType
+			err := json.Unmarshal(data, &doc)
+			if err == nil {
+				resp = append(resp, doc)
+			}
+		} else {
+			log.Printf("Unable to get %v", file)
+		}
+	}
+	out, jsonErr := json.Marshal(resp)
 	if RestError(jsonErr, response) {
 		return
 	}
@@ -34,29 +52,8 @@ func AllDocumentType(response http.ResponseWriter, request *http.Request) {
 func GetDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, jsonErr := json.Marshal(documentTypes[id])
-	if RestError(jsonErr, response) {
-		return
-	}
-	response.Header().Set("Document-Type", "application/json")
-	response.Write(out)
-}
-
-func PostDocumentType(response http.ResponseWriter, request *http.Request) {
-	bodyBytes, readErr := ioutil.ReadAll(request.Body)
-	if RestError(readErr, response) {
-		return
-	}
-	var tmp documentType
-	jsonErr := json.Unmarshal(bodyBytes, &tmp)
-	if RestError(jsonErr, response) {
-		return
-	}
-	tmp.Fields = make([]documentTypeField, 0)
-	tmp.Id = sha1sum(tmp)
-	documentTypes[tmp.Id] = tmp
-	out, jsonErr := json.Marshal(tmp)
-	if RestError(jsonErr, response) {
+	out, getErr := Repo.Get(fmt.Sprintf("/document-types/%s", id))
+	if RestError(getErr, response) {
 		return
 	}
 	response.Header().Set("Document-Type", "application/json")
@@ -70,15 +67,32 @@ func PutDocumentType(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	var tmp documentType
-	jsonErr := json.Unmarshal(bodyBytes, &tmp)
+	log.Printf("---->>>> want to write %s", string(bodyBytes))
+	addErr := Repo.Add(fmt.Sprintf("/document-types/%s", id), bodyBytes)
+	if RestError(addErr, response) {
+		return
+	}
+	response.Header().Set("Document-Type", "application/json")
+	response.Write(bodyBytes)
+}
+
+func PostDocumentType(response http.ResponseWriter, request *http.Request) {
+	bodyBytes, readErr := ioutil.ReadAll(request.Body)
+	if RestError(readErr, response) {
+		return
+	}
+	var doc documentType
+	jsonErr := json.Unmarshal(bodyBytes, &doc)
 	if RestError(jsonErr, response) {
 		return
 	}
-	tmp.Id = id
-	documentTypes[id] = tmp
-	out, jsonErr := json.Marshal(tmp)
-	if RestError(jsonErr, response) {
+	doc.Id = sha1sum(doc)
+	out, marsErr := json.Marshal(doc)
+	if RestError(marsErr, response) {
+		return
+	}
+	addErr := Repo.Add(fmt.Sprintf("/document-types/%s", doc.Id), out)
+	if RestError(addErr, response) {
 		return
 	}
 	response.Header().Set("Document-Type", "application/json")
@@ -88,7 +102,6 @@ func PutDocumentType(response http.ResponseWriter, request *http.Request) {
 func DeleteDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	delete(documentTypes, id)
+	Repo.Remove(fmt.Sprintf("/document-types/%s", id))
+	response.Header().Set("Document-Type", "application/json")
 }
-
-

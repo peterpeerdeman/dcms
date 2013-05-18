@@ -15,7 +15,8 @@ func Test_Init(t *testing.T) {
 
 func Test_Add(t *testing.T) {
 	repo := Init()
-	repo.Add("/test123", []byte("Test 123"))
+	addErr := repo.Add("/test123", []byte("Test 123"))
+	testErr(t, addErr)
 	listing, listingErr := repo.List("/")
 	testErr(t, listingErr)
 	if !contains(listing, "test123") {
@@ -24,6 +25,26 @@ func Test_Add(t *testing.T) {
 	t.Logf("%v", listing)
 	get, getErr := repo.Get("/test123")
 	testErr(t, getErr)
+	t.Logf("%v", get)
+	if string(get) != "Test 123" {
+		t.Error("Content not identical.")
+	}
+	t.Logf("%v", get)
+}
+
+func Test_AddUnkownDir(t *testing.T) {
+	repo := Init()
+	addErr := repo.Add("/documents/test123", []byte("Test 123"))
+	testErr(t, addErr)
+	listing, listingErr := repo.List("/documents")
+	testErr(t, listingErr)
+	if !contains(listing, "test123") {
+		t.Error("File test123 not found.")
+	}
+	t.Logf("%v", listing)
+	get, getErr := repo.Get("/documents/test123")
+	testErr(t, getErr)
+	t.Logf("%v", get)
 	if string(get) != "Test 123" {
 		t.Error("Content not identical.")
 	}

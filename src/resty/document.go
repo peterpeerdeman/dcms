@@ -2,81 +2,40 @@ package resty
 
 import (
 	"encoding/json"
-	"net/http"
-	"io/ioutil"
+	"fmt"
 	"github.com/gorilla/mux"
+	"io/ioutil"
 	"log"
+	"net/http"
 )
-
-type opCode int
-
-const (
-	opCreate opCode = iota
-	opRead
-	opReadAll
-    opUpdate
-	opDelete
-)
-
-type message struct {
-	op opCode
-	id string
-	value Document
-	resp chan interface{}
-}
 
 type Document struct {
-	Id string
-	Path string
-	Type string
-	Name string
-	Fields map[string] string
-}
-
-func DocumentProcessor(messageChannel chan message) {
-	documents := make(map[string] Document)
-	for {
-		select {
-		case msg, msg_ok := <-messageChannel:
-			if !msg_ok {
-				log.Println("DocumentProcessor: Channel closed")
-				return
-			}
-			log.Printf("%v", msg)
-			switch msg.op {
-			case opCreate:
-				documents[msg.id] = msg.value
-			case opRead:
-				msg.resp <- documents[msg.id]
-			case opReadAll:
-				msg.resp <- map2slice(documents)
-			case opUpdate:
-				doc := documents[msg.id]
-				doc.Name = msg.value.Name
-				doc.Fields = msg.value.Fields
-				documents[msg.id] = doc
-			case opDelete:
-				delete(documents, msg.id)
-			}
-		}
-	}
-}
-
-func map2slice(m map[string] Document) []Document {
-	v := make([]Document, len(m))
-	idx := 0
-	for _, value := range m {
-		v[idx] = value
-		idx++
-	}
-	return v
+	Id     string
+	Path   string
+	Type   string
+	Name   string
+	Fields map[string]string
 }
 
 func AllDocument(response http.ResponseWriter, request *http.Request) {
-	readChan := make(chan interface{})
-	msg := message{op: opReadAll, resp: readChan}
-	messageChannel <- msg
-	resp := <- readChan
+	docs, listErr := Repo.List("/documents")
+	if listErr != nil {
+		return
+	}
+	log.Printf("Listing %v", docs)
+	var resp []Document
+	for _, file := range docs {
+		data, getErr := Repo.Get(fmt.Sprintf("/documents/%s", file))
+		if getErr == nil {
+			var doc Document
+			err := json.Unmarshal(data, &doc)
+			if err == nil {
+				resp = append(resp, doc)
+			}
+		} else {
+			log.Printf("Unable to get %v", file)
+		}
+	}
 	out, jsonErr := json.Marshal(resp)
 	if RestError(jsonErr, response) {
 		return
@@ -88,12 +47,8 @@ func AllDocument(response http.ResponseWriter, request *http.Request) {
 func GetDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	readChan := make(chan interface{})
-	msg := message{op: opRead, id: id, resp: readChan}
-	messageChannel <- msg
-	resp := <- readChan
-	out, jsonErr := json.Marshal(resp)
-	if RestError(jsonErr, response) {
+	out, getErr := Repo.Get(fmt.Sprintf("/documents/%s", id))
+	if RestError(getErr, response) {
 		return
 	}
 	response.Header().Set("Document-Type", "application/json")
@@ -107,17 +62,13 @@ func PutDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	var content Document
-	jsonErr := json.Unmarshal(bodyBytes, &content)
-	if RestError(jsonErr, response) {
+	log.Printf("---->>>> want to write %s", string(bodyBytes))
+	addErr := Repo.Add(fmt.Sprintf("/documents/%s", id), bodyBytes)
+	if RestError(addErr, response) {
 		return
 	}
-	readChan := make(chan interface{})
-	msg := message{op: opUpdate, id: id, value: content, resp: readChan}
-	messageChannel <- msg
 	response.Header().Set("Document-Type", "application/json")
-	out, _ := json.Marshal(content)
-	response.Write(out)
+	response.Write(bodyBytes)
 }
 
 func PostDocument(response http.ResponseWriter, request *http.Request) {
@@ -125,25 +76,27 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	var content Document
-	jsonErr := json.Unmarshal(bodyBytes, &content)
+	var doc Document
+	jsonErr := json.Unmarshal(bodyBytes, &doc)
 	if RestError(jsonErr, response) {
 		return
 	}
-	content.Fields = make(map[string] string)
-	id := sha1sum(content)
-	content.Id = id
-	readChan := make(chan interface{})
-	msg := message{op: opCreate, id: id, value: content, resp: readChan}
-	messageChannel <- msg
+	doc.Id = sha1sum(doc)
+	out, marsErr := json.Marshal(doc)
+	if RestError(marsErr, response) {
+		return
+	}
+	addErr := Repo.Add(fmt.Sprintf("/documents/%s", doc.Id), out)
+	if RestError(addErr, response) {
+		return
+	}
 	response.Header().Set("Document-Type", "application/json")
-	out, _ := json.Marshal(content)
 	response.Write(out)
 }
 
 func DeleteDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	msg := message{op: opDelete, id: id}
-	messageChannel <- msg
+	Repo.Remove(fmt.Sprintf("/documents/%s", id))
+	response.Header().Set("Document-Type", "application/json")
 }

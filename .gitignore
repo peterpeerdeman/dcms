@@ -23,6 +23,8 @@ _testmain.go
 
 src/github.com
 src/dcms
+src/storage/data/*
+data/*
 
 .idea
 *.iml
