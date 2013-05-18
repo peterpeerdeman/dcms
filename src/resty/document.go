@@ -16,7 +16,7 @@ type Document struct {
 	Path   string
 	Type   string
 	Name   string
-	Fields map[string]string
+	Fields map[string]interface{}
 }
 
 func AllDocument(response http.ResponseWriter, request *http.Request) {
@@ -82,7 +82,7 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	doc.Id = slug.Slug(doc.Name)
-	doc.Fields = make(map[string]string)
+	doc.Fields = make(map[string]interface{})
 	out, marsErr := json.Marshal(doc)
 	if RestError(marsErr, response) {
 		return
