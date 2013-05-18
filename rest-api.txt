@@ -28,3 +28,16 @@ DELETE  /rest/document-type/{id}     delete a template
         }
 	]
 }
+
+GET     /rest/file          retrieve all files
+POST    /rest/file          create a new file
+GET     /rest/file/{id}     retrieve a file
+PUT     /rest/file/{id}     update a file
+DELETE  /rest/file/{id}     delete a file
+
+{
+        "Id": "iuahdoiadfvsdfv",
+        "Name": "plaatje.gif"
+}
+
+GET     /files/iuahdoiadfvsdfv

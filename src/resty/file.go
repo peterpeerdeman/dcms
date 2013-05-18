@@ -1,37 +1,32 @@
 package resty
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-type documentTypeField struct {
-	Name string
-	Type string
-	Max  int
-	Min  int
+type File struct {
+	Id       string
+	Name     string
+	MimeType string
 }
 
-type documentType struct {
-	Id     string
-	Name   string
-	Fields []documentTypeField
-}
-
-func AllDocumentType(response http.ResponseWriter, request *http.Request) {
-	docs, listErr := Repo.List("/document-types")
+func AllFile(response http.ResponseWriter, request *http.Request) {
+	docs, listErr := Repo.List("/files")
 	if listErr != nil {
 		return
 	}
-	var resp []documentType
+	var resp []File
 	for _, file := range docs {
-		data, getErr := Repo.Get(fmt.Sprintf("/document-types/%s", file))
+		data, getErr := Repo.Get(fmt.Sprintf("/files/%s", file))
 		if getErr == nil {
-			var doc documentType
+			var doc File
 			err := json.Unmarshal(data, &doc)
 			if err == nil {
 				resp = append(resp, doc)
@@ -48,10 +43,21 @@ func AllDocumentType(response http.ResponseWriter, request *http.Request) {
 	response.Write(out)
 }
 
-func GetDocumentType(response http.ResponseWriter, request *http.Request) {
+func GetContent(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, getErr := Repo.Get(fmt.Sprintf("/document-types/%s", id))
+	out, getErr := Repo.Get(fmt.Sprintf("/content/%s", id))
+	if RestError(getErr, response) {
+		return
+	}
+	//response.Header().Set("Document-Type", "application/json")
+	response.Write(out)
+}
+
+func GetFile(response http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	id := vars["id"]
+	out, getErr := Repo.Get(fmt.Sprintf("/files/%s", id))
 	if RestError(getErr, response) {
 		return
 	}
@@ -59,14 +65,14 @@ func GetDocumentType(response http.ResponseWriter, request *http.Request) {
 	response.Write(out)
 }
 
-func PutDocumentType(response http.ResponseWriter, request *http.Request) {
+func PutFile(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/document-types/%s", id), bodyBytes)
+	addErr := Repo.Add(fmt.Sprintf("/files/%s", id), bodyBytes)
 	if RestError(addErr, response) {
 		return
 	}
@@ -74,32 +80,44 @@ func PutDocumentType(response http.ResponseWriter, request *http.Request) {
 	response.Write(bodyBytes)
 }
 
-func PostDocumentType(response http.ResponseWriter, request *http.Request) {
+func PostFile(response http.ResponseWriter, request *http.Request) {
 	bodyBytes, readErr := ioutil.ReadAll(request.Body)
 	if RestError(readErr, response) {
 		return
 	}
-	var doc documentType
+	var doc File
 	jsonErr := json.Unmarshal(bodyBytes, &doc)
 	if RestError(jsonErr, response) {
 		return
 	}
+	uploaded, tweede, formErr := request.FormFile("file")
+	if RestError(formErr, response) {
+		return
+	}
+	doc.Name = tweede.Filename
+	doc.MimeType = tweede.Header.Get("Document-Type")
 	doc.Id = uuid()
+	var buf bytes.Buffer
+	io.Copy(&buf, uploaded)
 	out, marsErr := json.Marshal(doc)
 	if RestError(marsErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/document-types/%s", doc.Id), out)
+	addErr := Repo.Add(fmt.Sprintf("/files/%s", doc.Id), out)
 	if RestError(addErr, response) {
+		return
+	}
+	fileErr := Repo.Add(fmt.Sprintf("/content/%s", doc.Id), buf.Bytes())
+	if RestError(fileErr, response) {
 		return
 	}
 	response.Header().Set("Document-Type", "application/json")
 	response.Write(out)
 }
 
-func DeleteDocumentType(response http.ResponseWriter, request *http.Request) {
+func DeleteFile(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	Repo.Remove(fmt.Sprintf("/document-types/%s", id))
+	Repo.Remove(fmt.Sprintf("/files/%s", id))
 	response.Header().Set("Document-Type", "application/json")
 }

@@ -30,6 +30,13 @@ func Cms() {
 	router.HandleFunc("/rest/document-type/{id}", PutDocumentType).Methods("PUT")
 	router.HandleFunc("/rest/document-type/{id}", DeleteDocumentType).Methods("DELETE")
 
+	router.HandleFunc("/content/{id}", GetContent).Methods("GET")
+	router.HandleFunc("/rest/file", AllFile).Methods("GET")
+	router.HandleFunc("/rest/file", PostFile).Methods("POST")
+	router.HandleFunc("/rest/file/{id}", GetFile).Methods("GET")
+	router.HandleFunc("/rest/file/{id}", PutFile).Methods("PUT")
+	router.HandleFunc("/rest/file/{id}", DeleteFile).Methods("DELETE")
+
 	http.Handle("/rest/", router)
 }
 

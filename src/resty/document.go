@@ -79,7 +79,8 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
-	doc.Id = sha1sum(doc)
+	doc.Id = uuid()
+	doc.Fields = make(map[string]string)
 	out, marsErr := json.Marshal(doc)
 	if RestError(marsErr, response) {
 		return
