@@ -29,7 +29,7 @@ angular.module('dcms.controllers', [])
     .controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
 
         $scope.document = {"Name": "", "Type": ""};
-        $scope.documentTypes = DocumentTypeStorage.get();
+        $scope.documentTypes = DocumentTypeStorage.query();
 
         $scope.createDocument = function() {
             DocumentStorage.save($scope.document, function (d) {

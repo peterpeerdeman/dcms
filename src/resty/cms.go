@@ -1,9 +1,12 @@
 package resty
 
 import (
-	"net/http"
 	"github.com/gorilla/mux"
+	"net/http"
+	"storage"
 )
+
+var Repo *storage.Repository
 
 func Cms() {
 
@@ -11,6 +14,8 @@ func Cms() {
 	http.Handle("/cms/assets/", http.StripPrefix("/cms/assets", http.FileServer(http.Dir("./assets"))))
 
 	Init()
+
+	Repo = storage.Init()
 
 	router := mux.NewRouter()
 	router.HandleFunc("/rest/document", AllDocument).Methods("GET")
@@ -30,6 +35,6 @@ func Cms() {
 
 func serveSingle(pattern string, filename string) {
 	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, filename)
-		})
+		http.ServeFile(w, r, filename)
+	})
 }
