@@ -46,7 +46,7 @@ angular.module('dcms.controllers', [])
                 for (var i = 0; i < fields.length; i++) {
                     var subfields = [];
                     for (var subfield_index = 0; subfield_index < fields[i].Max; subfield_index++) {
-                        subfields[subfield_index] = {"index": subfield_index, "required": subfield_index <= fields[i].Min};
+                        subfields[subfield_index] = {"index": subfield_index, "required": subfield_index < fields[i].Min};
                     }
                     $scope.documentType.Fields[i].subfields = subfields;
                 }
