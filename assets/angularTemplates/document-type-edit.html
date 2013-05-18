@@ -27,6 +27,12 @@
 
                 <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
             </div>
+            <div ng-switch-when="file">
+                <label for="{{field.Name}}">{{field.Name}}</label>
+                <input id="{{field.Name}}" type="text" disabled>
+
+                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+            </div>
         </div>
     </li>
 </ul>
@@ -42,6 +48,7 @@
         <option value="textarea">Text area</option>
         <option value="html">Html editor</option>
         <option value="date">Date</option>
+        <option value="file">File upload</option>
     </select>
     <label for="min">Min</label>
     <input id="min" type="number" ng-model="newDocumentField.Min" required>

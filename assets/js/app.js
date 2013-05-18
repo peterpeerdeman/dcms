@@ -14,5 +14,6 @@ angular.module('dcms', ['dcms.filters', 'dcms.services', 'dcms.directives', 'dcm
     $routeProvider.when('/document-type/new', {templateUrl: '/cms/assets/angularTemplates/document-type-new.html', controller: 'NewDocumentTypeCtrl'});
     $routeProvider.when('/document-type/edit/:Id', {templateUrl: '/cms/assets/angularTemplates/document-type-edit.html', controller: 'EditDocumentTypeCtrl'});
     $routeProvider.when('/channel/overview', {templateUrl: '/cms/assets/angularTemplates/channel-overview.html', controller: 'OverviewCtrl'});
+    $routeProvider.when('/fileupload', {templateUrl: '/cms/assets/angularTemplates/fileupload.html', controller: 'FileuploadCtrl'});
     $routeProvider.otherwise({redirectTo: '/'});
   }]);

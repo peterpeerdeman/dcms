@@ -52,7 +52,7 @@ angular.module('dcms.controllers', [])
         $scope.deleteDocument = function() {
             $scope.document.$delete({id: $scope.document.Id});
             $location.url('/');
-        }
+        };
     })
 
     .controller('TemplateOverviewCtrl', function TemplateOverviewCtrl($scope, TemplateStorage){
@@ -111,4 +111,43 @@ angular.module('dcms.controllers', [])
             var index = $scope.documentType.Fields.indexOf(field);
             $scope.documentType.Fields.splice(index,1);
         };
+    })
+
+    .controller('FileuploadCtrl', function FileuploadCtrl($scope, FileStorage) {
+
+        $scope.files = FileStorage.query();
+
+        $scope.uploadFile = function() {
+            var formData = new FormData($('form')[0]);
+            $.ajax({
+                url: '/rest/file',
+                type: 'POST',
+                xhr: function() {  // custom xhr
+                    var myXhr = $.ajaxSettings.xhr();
+                    if(myXhr.upload){ // check if upload property exists
+                        myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // for handling the progress of the upload
+                    }
+                    return myXhr;
+                },
+                //Ajax events
+//                beforeSend: beforeSendHandler,
+//                success: completeHandler,
+//                error: errorHandler,
+                // Form data
+                data: formData,
+                //Options to tell JQuery not to process data or worry about content-type
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            function progressHandlingFunction(e){
+                if(e.lengthComputable){
+                    $('progress').attr({value:e.loaded,max:e.total});
+                }
+            }
+
+        }
+
+
     });
