@@ -39,6 +39,7 @@ angular.module('dcms.controllers', [])
     })
 
     .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
+        $scope.count = {};
         $scope.documents = DocumentStorage.query();
         $scope.document = DocumentStorage.get({id: $routeParams.Id}, function () {
             $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type}, function () {
@@ -54,6 +55,12 @@ angular.module('dcms.controllers', [])
                         $scope.document.Fields[field.Name] = new Array();
                     } 
                 }
+
+                for (var i=0; $scope.documentType.Fields.length > i; i++){
+                    var field = $scope.documentType.Fields[i];
+                    $scope.count[field.Name] = field.Min;
+                }
+
             });
         });
 
@@ -66,6 +73,20 @@ angular.module('dcms.controllers', [])
             $scope.document.$delete({id: $scope.document.Id});
             $location.url('/');
         };
+
+        $scope.isVisible = function(name, index){
+            return ($scope.document.Fields[name][index] !== undefined && $scope.document.Fields[name][index].length > 0) || $scope.count[name] > index ;
+        };
+
+        $scope.isAddable = function(name, max){
+            console.log($scope.count[name]);
+            return max > $scope.count[name];
+        };
+
+        $scope.addField = function(fieldName){
+            $scope.count[fieldName]++;
+        };
+
     })
 
     .controller('TemplateOverviewCtrl', function TemplateOverviewCtrl($scope, TemplateStorage){
@@ -131,6 +152,7 @@ angular.module('dcms.controllers', [])
         $scope.files = FileStorage.query();
 
         $scope.uploadFile = function() {
+            $scope.uploadStarted = true;
             var formData = new FormData($('form')[0]);
             $.ajax({
                 url: '/rest/file',
@@ -144,7 +166,7 @@ angular.module('dcms.controllers', [])
                 },
                 //Ajax events
 //                beforeSend: beforeSendHandler,
-//                success: completeHandler,
+                success: function(){$scope.files = FileStorage.query();},
 //                error: errorHandler,
                 // Form data
                 data: formData,

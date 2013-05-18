@@ -5,4 +5,11 @@
     <input name="file" type="file" ng-model="document.Fields[field.Name]"/>
     <input ng-click="uploadFile()" type="button" class="" value="Upload" />
 </form>
-<progress></progress>
+<progress ng-show="uploadStarted"></progress>
+
+
+<ul ng-repeat="file in files">
+    <li>{{file.Name}}</li>
+</ul>
+
+        {{files}}

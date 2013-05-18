@@ -41,7 +41,7 @@ services.factory('FileStorage', function($resource){
         'get':    {method:'GET'},
         'post':   {method:'POST'},
         'update': {method:'PUT'},
-        'getAll':  {method:'GET', isArray: true},
+        'query':  {method:'GET', isArray: true},
         'delete': {method:'DELETE'}
     };
     return $resource('/rest/file/:id', {id: '@id'}, DEFAULT_ACTIONS);
