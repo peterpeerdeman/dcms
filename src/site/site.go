@@ -1,16 +1,16 @@
 package site
 
 import (
-	"net/http"
-	"html/template"
-	"reflect"
-	"log"
-	"fmt"
-	"runtime/debug"
-	"os"
-	"errors"
 	"bytes"
+	"errors"
+	"fmt"
+	"html/template"
+	"log"
+	"net/http"
+	"os"
+	"reflect"
 	"regexp"
+	"runtime/debug"
 )
 
 func Site() {
@@ -35,14 +35,14 @@ func HandleAll(response http.ResponseWriter, request *http.Request) {
 	HttpError(errors.New("No page found"), response)
 }
 
-func matches(pattern, str string) (bool, map[string] string) {
+func matches(pattern, str string) (bool, map[string]string) {
 	reg := regexp.MustCompile(pattern)
 	match, vars := findStringSubmatchMap(reg, str)
 	return match, vars
 }
 
-func findStringSubmatchMap(r *regexp.Regexp, s string) (bool, map[string] string) {
-	captures := make(map[string] string)
+func findStringSubmatchMap(r *regexp.Regexp, s string) (bool, map[string]string) {
+	captures := make(map[string]string)
 	match := r.FindStringSubmatch(s)
 	if match == nil {
 		return false, captures
@@ -56,7 +56,7 @@ func findStringSubmatchMap(r *regexp.Regexp, s string) (bool, map[string] string
 	return true, captures
 }
 
-func Render(templateFile string, vars map[string] interface{}) string {
+func Render(templateFile string, vars map[string]interface{}) string {
 	t := template.New("bunch")
 	t.Funcs(template.FuncMap{"eq": reflect.DeepEqual})
 	_, parseErr := t.ParseFiles(fmt.Sprintf("mysite/templates/%s", templateFile))
@@ -76,7 +76,7 @@ func HttpError(err error, response http.ResponseWriter) bool {
 		log.Printf("%v", err)
 		response.Header().Set("Content-Type", "text/html; charset=utf-8")
 		response.WriteHeader(500)
-		tmplVars := make(map[string] interface{})
+		tmplVars := make(map[string]interface{})
 		tmplVars["Error"] = fmt.Sprintf("%v", err)
 		tmplVars["Stack"] = string(debug.Stack())
 		out := Render("error.tpl", tmplVars)

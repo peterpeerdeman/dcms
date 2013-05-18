@@ -1,8 +1,8 @@
 all:
-	go install mysite
-	go install site
 	go install storage
 	go install resty
+	go install mysite
+	go install site
 	go build src/dcms.go
 
 test:

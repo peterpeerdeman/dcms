@@ -3,21 +3,15 @@ package resty
 import (
 	"github.com/gorilla/mux"
 	"net/http"
-	"storage"
 )
-
-var Repo *storage.Repository
 
 func Cms() {
 
 	serveSingle("/cms/", "assets/index.html")
 	http.Handle("/cms/assets/", http.StripPrefix("/cms/assets", http.FileServer(http.Dir("./assets"))))
 
-	Init()
-
-	Repo = storage.Init()
-
 	router := mux.NewRouter()
+
 	router.HandleFunc("/rest/document", AllDocument).Methods("GET")
 	router.HandleFunc("/rest/document", PostDocument).Methods("POST")
 	router.HandleFunc("/rest/document/{id}", GetDocument).Methods("GET")
@@ -30,7 +24,6 @@ func Cms() {
 	router.HandleFunc("/rest/document-type/{id}", PutDocumentType).Methods("PUT")
 	router.HandleFunc("/rest/document-type/{id}", DeleteDocumentType).Methods("DELETE")
 
-	router.HandleFunc("/content/{id}", GetContent).Methods("GET")
 	router.HandleFunc("/rest/file", AllFile).Methods("GET")
 	router.HandleFunc("/rest/file", PostFile).Methods("POST")
 	router.HandleFunc("/rest/file/{id}", GetFile).Methods("GET")
@@ -38,6 +31,11 @@ func Cms() {
 	router.HandleFunc("/rest/file/{id}", DeleteFile).Methods("DELETE")
 
 	http.Handle("/rest/", router)
+
+	contentRouter := mux.NewRouter()
+	contentRouter.HandleFunc("/content/{id}", GetContent).Methods("GET")
+	http.Handle("/content/", contentRouter)
+
 }
 
 func serveSingle(pattern string, filename string) {

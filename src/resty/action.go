@@ -1,5 +1,1 @@
 package resty
-
-func Init() {
-
-}

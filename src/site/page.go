@@ -2,28 +2,28 @@ package site
 
 import (
 	"fmt"
-	"strings"
 	"log"
-	"net/http"
 	"mysite"
+	"net/http"
+	"strings"
 )
 
 type Page struct {
 	Template    string
 	Component   string
 	ContentPath string
-	Variables map[string] string
-	SubPages map[string] Page
+	Variables   map[string]string
+	SubPages    map[string]Page
 }
 
-func (this *Page) Render(response http.ResponseWriter, request *http.Request, channel *Channel, requestVars map[string] string) {
+func (this *Page) Render(response http.ResponseWriter, request *http.Request, channel *Channel, requestVars map[string]string) {
 	log.Printf("Component %s %v path %s", this.Component, requestVars, this.GetContentPath(requestVars))
 	component_out := this.RenderComponent(response, request, channel, requestVars)
 	response.Write([]byte(component_out))
 }
 
-func (this *Page) RenderComponent(response http.ResponseWriter, request *http.Request, channel *Channel, requestVars map[string] string) string {
-	vars := make(map[string] interface{})
+func (this *Page) RenderComponent(response http.ResponseWriter, request *http.Request, channel *Channel, requestVars map[string]string) string {
+	vars := make(map[string]interface{})
 	for name, value := range channel.Variables {
 		vars[name] = value
 	}
@@ -38,7 +38,7 @@ func (this *Page) RenderComponent(response http.ResponseWriter, request *http.Re
 		if component_id_found {
 			component, component_found := mysite.Components[component_id.ObjectName]
 			if component_found {
-				output := component.Render(response, request)
+				output := component.Render(response, request, vars)
 				for name, value := range output {
 					vars[name] = value
 				}
@@ -58,7 +58,7 @@ func (this *Page) RenderComponent(response http.ResponseWriter, request *http.Re
 	return ""
 }
 
-func (this *Page) GetContentPath(requestVars map[string] string) string {
+func (this *Page) GetContentPath(requestVars map[string]string) string {
 	path := this.ContentPath
 	for name, value := range requestVars {
 		path = strings.Replace(path, fmt.Sprintf("{%s}", name), value, -1)

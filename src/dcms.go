@@ -5,19 +5,20 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
+	"resty"
 	"runtime/debug"
 	"site"
-	"resty"
-	"net/http"
+	"storage"
 )
 
 var config struct {
-	SqlHostname       string
-	SqlUser           string
-	SqlPassword       string
-	SqlDatabase       string
-	ListenAddress     string
+	SqlHostname   string
+	SqlUser       string
+	SqlPassword   string
+	SqlDatabase   string
+	ListenAddress string
 }
 
 func main() {
@@ -30,6 +31,8 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
+
+	storage.Init()
 
 	resty.Cms()
 	site.Site()

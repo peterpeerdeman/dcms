@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"storage"
 )
 
 type File struct {
@@ -18,13 +19,13 @@ type File struct {
 }
 
 func AllFile(response http.ResponseWriter, request *http.Request) {
-	docs, listErr := Repo.List("/files")
+	docs, listErr := storage.Repo.List("/files")
 	if listErr != nil {
 		return
 	}
 	var resp []File
 	for _, file := range docs {
-		data, getErr := Repo.Get(fmt.Sprintf("/files/%s", file))
+		data, getErr := storage.Repo.Get(fmt.Sprintf("/files/%s", file))
 		if getErr == nil {
 			var doc File
 			err := json.Unmarshal(data, &doc)
@@ -46,18 +47,28 @@ func AllFile(response http.ResponseWriter, request *http.Request) {
 func GetContent(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, getErr := Repo.Get(fmt.Sprintf("/content/%s", id))
+	out, getErr := storage.Repo.Get(fmt.Sprintf("/content/%s", id))
 	if RestError(getErr, response) {
 		return
 	}
-	//response.Header().Set("Document-Type", "application/json")
+	out2, getErr2 := storage.Repo.Get(fmt.Sprintf("/files/%s", id))
+	if RestError(getErr2, response) {
+		return
+	}
+	var file File
+	jsonErr := json.Unmarshal(out2, &file)
+	if RestError(jsonErr, response) {
+		return
+	}
+	//response.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", file.Name))
+	response.Header().Set("Content-Type", file.MimeType)
 	response.Write(out)
 }
 
 func GetFile(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, getErr := Repo.Get(fmt.Sprintf("/files/%s", id))
+	out, getErr := storage.Repo.Get(fmt.Sprintf("/files/%s", id))
 	if RestError(getErr, response) {
 		return
 	}
@@ -72,7 +83,7 @@ func PutFile(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/files/%s", id), bodyBytes)
+	addErr := storage.Repo.Add(fmt.Sprintf("/files/%s", id), bodyBytes)
 	if RestError(addErr, response) {
 		return
 	}
@@ -81,33 +92,26 @@ func PutFile(response http.ResponseWriter, request *http.Request) {
 }
 
 func PostFile(response http.ResponseWriter, request *http.Request) {
-	bodyBytes, readErr := ioutil.ReadAll(request.Body)
-	if RestError(readErr, response) {
-		return
-	}
-	var doc File
-	jsonErr := json.Unmarshal(bodyBytes, &doc)
-	if RestError(jsonErr, response) {
-		return
-	}
 	uploaded, tweede, formErr := request.FormFile("file")
 	if RestError(formErr, response) {
 		return
 	}
+	var doc File
 	doc.Name = tweede.Filename
-	doc.MimeType = tweede.Header.Get("Document-Type")
+	doc.MimeType = tweede.Header.Get("Content-Type")
 	doc.Id = uuid()
 	var buf bytes.Buffer
 	io.Copy(&buf, uploaded)
 	out, marsErr := json.Marshal(doc)
+	log.Printf("%v", tweede.Header)
 	if RestError(marsErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/files/%s", doc.Id), out)
+	addErr := storage.Repo.Add(fmt.Sprintf("/files/%s", doc.Id), out)
 	if RestError(addErr, response) {
 		return
 	}
-	fileErr := Repo.Add(fmt.Sprintf("/content/%s", doc.Id), buf.Bytes())
+	fileErr := storage.Repo.Add(fmt.Sprintf("/content/%s", doc.Id), buf.Bytes())
 	if RestError(fileErr, response) {
 		return
 	}
@@ -118,6 +122,6 @@ func PostFile(response http.ResponseWriter, request *http.Request) {
 func DeleteFile(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	Repo.Remove(fmt.Sprintf("/files/%s", id))
+	storage.Repo.Remove(fmt.Sprintf("/files/%s", id))
 	response.Header().Set("Document-Type", "application/json")
 }

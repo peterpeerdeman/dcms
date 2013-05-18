@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"storage"
 )
 
 type Document struct {
@@ -18,13 +19,13 @@ type Document struct {
 }
 
 func AllDocument(response http.ResponseWriter, request *http.Request) {
-	docs, listErr := Repo.List("/documents")
+	docs, listErr := storage.Repo.List("/documents")
 	if listErr != nil {
 		return
 	}
 	var resp []Document
 	for _, file := range docs {
-		data, getErr := Repo.Get(fmt.Sprintf("/documents/%s", file))
+		data, getErr := storage.Repo.Get(fmt.Sprintf("/documents/%s", file))
 		if getErr == nil {
 			var doc Document
 			err := json.Unmarshal(data, &doc)
@@ -46,7 +47,7 @@ func AllDocument(response http.ResponseWriter, request *http.Request) {
 func GetDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, getErr := Repo.Get(fmt.Sprintf("/documents/%s", id))
+	out, getErr := storage.Repo.Get(fmt.Sprintf("/documents/%s", id))
 	if RestError(getErr, response) {
 		return
 	}
@@ -61,7 +62,7 @@ func PutDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/documents/%s", id), bodyBytes)
+	addErr := storage.Repo.Add(fmt.Sprintf("/documents/%s", id), bodyBytes)
 	if RestError(addErr, response) {
 		return
 	}
@@ -85,7 +86,7 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(marsErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/documents/%s", doc.Id), out)
+	addErr := storage.Repo.Add(fmt.Sprintf("/documents/%s", doc.Id), out)
 	if RestError(addErr, response) {
 		return
 	}
@@ -96,6 +97,6 @@ func PostDocument(response http.ResponseWriter, request *http.Request) {
 func DeleteDocument(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	Repo.Remove(fmt.Sprintf("/documents/%s", id))
+	storage.Repo.Remove(fmt.Sprintf("/documents/%s", id))
 	response.Header().Set("Document-Type", "application/json")
 }

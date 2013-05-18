@@ -8,18 +8,23 @@ type Repository struct {
 	Head *tree
 }
 
-func Init() *Repository {
+var Repo *Repository
+
+func Init() {
 	if repo_exists("head.json") {
+		log.Printf("Loading existing repository.")
 		repo, err := load_repo("head.json")
 		if err != nil {
 			log.Fatalf("Unable to parse head.json %v", err)
 		}
-		return repo
+		Repo = repo
+		return
 	}
-	var repo Repository
-	repo.Head = newTree()
-	save_repo("head.json", &repo)
-	return &repo
+	log.Printf("Creating new repository.")
+	var newRepository Repository
+	newRepository.Head = newTree()
+	save_repo("head.json", &newRepository)
+	Repo = &newRepository
 }
 
 func (this *Repository) Get(filename string) ([]byte, error) {

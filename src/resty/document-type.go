@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"storage"
 )
 
 type documentTypeField struct {
@@ -23,13 +24,13 @@ type documentType struct {
 }
 
 func AllDocumentType(response http.ResponseWriter, request *http.Request) {
-	docs, listErr := Repo.List("/document-types")
+	docs, listErr := storage.Repo.List("/document-types")
 	if listErr != nil {
 		return
 	}
 	var resp []documentType
 	for _, file := range docs {
-		data, getErr := Repo.Get(fmt.Sprintf("/document-types/%s", file))
+		data, getErr := storage.Repo.Get(fmt.Sprintf("/document-types/%s", file))
 		if getErr == nil {
 			var doc documentType
 			err := json.Unmarshal(data, &doc)
@@ -51,7 +52,7 @@ func AllDocumentType(response http.ResponseWriter, request *http.Request) {
 func GetDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	out, getErr := Repo.Get(fmt.Sprintf("/document-types/%s", id))
+	out, getErr := storage.Repo.Get(fmt.Sprintf("/document-types/%s", id))
 	if RestError(getErr, response) {
 		return
 	}
@@ -66,7 +67,7 @@ func PutDocumentType(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/document-types/%s", id), bodyBytes)
+	addErr := storage.Repo.Add(fmt.Sprintf("/document-types/%s", id), bodyBytes)
 	if RestError(addErr, response) {
 		return
 	}
@@ -89,7 +90,7 @@ func PostDocumentType(response http.ResponseWriter, request *http.Request) {
 	if RestError(marsErr, response) {
 		return
 	}
-	addErr := Repo.Add(fmt.Sprintf("/document-types/%s", doc.Id), out)
+	addErr := storage.Repo.Add(fmt.Sprintf("/document-types/%s", doc.Id), out)
 	if RestError(addErr, response) {
 		return
 	}
@@ -100,6 +101,6 @@ func PostDocumentType(response http.ResponseWriter, request *http.Request) {
 func DeleteDocumentType(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id := vars["id"]
-	Repo.Remove(fmt.Sprintf("/document-types/%s", id))
+	storage.Repo.Remove(fmt.Sprintf("/document-types/%s", id))
 	response.Header().Set("Document-Type", "application/json")
 }
