@@ -43,7 +43,6 @@ func (this *Repository) List(filename string) ([]string, error) {
 }
 
 func (this *Repository) Add(filename string, content []byte) error {
-	log.Printf("Respository.Add %v %v", filename, content)
 	blobId, err := save_blob(content)
 	if err != nil {
 		return err
@@ -56,7 +55,6 @@ func (this *Repository) Add(filename string, content []byte) error {
 	if saveErr != nil {
 		return saveErr
 	}
-	log.Printf("I'm ready!!")
 	return nil
 }
 

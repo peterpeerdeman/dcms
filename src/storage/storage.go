@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 )
@@ -47,7 +46,6 @@ func load_repo(name string) (*Repository, error) {
 	if readErr != nil {
 		return &repo, readErr
 	}
-	log.Printf("%v", string(content))
 	jsonErr := json.Unmarshal(content, &repo)
 	if jsonErr != nil {
 		return &repo, jsonErr

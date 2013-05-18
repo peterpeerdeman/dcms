@@ -22,7 +22,6 @@ func AllDocument(response http.ResponseWriter, request *http.Request) {
 	if listErr != nil {
 		return
 	}
-	log.Printf("Listing %v", docs)
 	var resp []Document
 	for _, file := range docs {
 		data, getErr := Repo.Get(fmt.Sprintf("/documents/%s", file))
@@ -62,7 +61,6 @@ func PutDocument(response http.ResponseWriter, request *http.Request) {
 	if RestError(readErr, response) {
 		return
 	}
-	log.Printf("---->>>> want to write %s", string(bodyBytes))
 	addErr := Repo.Add(fmt.Sprintf("/documents/%s", id), bodyBytes)
 	if RestError(addErr, response) {
 		return
