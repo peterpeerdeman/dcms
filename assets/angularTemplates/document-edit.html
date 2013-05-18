@@ -1,8 +1,8 @@
 <h1>Edit document {{document.Name}}</h1>
 
-detail page for {{documentId}}<br/>
-<p>Id: {{document.Id}}</p>
-<p>Name: {{document.Name}}</p>
+<!--detail page for {{documentId}}<br/>-->
+<!--<p>Id: {{document.Id}}</p>-->
+<!--<p>Name: {{document.Name}}</p>-->
 
 <form class="form-horizontal" name="editForm" id="edit-form">
 
@@ -23,6 +23,13 @@ detail page for {{documentId}}<br/>
             <div ng-switch-when="textarea">
                 <textarea ng-model="document.Fields[field.Name]" placeholder="{{field.Name}}" cols="10"></textarea>
             </div>
+            <div ng-switch-when="html">
+                <markdown ng-model="document.Fields[field.Name]">
+                </markdown>
+            </div>
+            <div ng-switch-when="date">
+                <input ui-date="dateOptions" ng-model="document.Fields[field.Name]"/>
+            </div>
         </div>
     </div>
 
@@ -34,3 +41,5 @@ detail page for {{documentId}}<br/>
     </div>
 
 </form>
+
+{{document}}
