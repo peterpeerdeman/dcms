@@ -2,10 +2,6 @@ language: go
 install:
   - cd /home/travis/build/alleveenstra/dcms
   - export GOPATH=/home/travis/build/alleveenstra/dcms
-  - go get github.com/gorilla/mux
-  - go get github.com/howeyc/fsnotify
-  - go install mysite
-  - go install site
-  - go install storage
-  - go install resty
-  - go build src/dcms.go
+  - make clean
+  - make fetch
+  - make

@@ -4,10 +4,9 @@ dcms
 Content Management System build in Go and AngularJS.
 
 ```bash
-set GOPATH="d:\Git\Projects\dcms"
+set GOPATH=`pwd`
 
-go get github.com/gorilla/mux
-go get github.com/howeyc/fsnotify
+make fetch
 
 go install mysite
 go install site

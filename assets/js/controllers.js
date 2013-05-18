@@ -41,7 +41,16 @@ angular.module('dcms.controllers', [])
     .controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
         $scope.documents = DocumentStorage.query();
         $scope.document = DocumentStorage.get({id: $routeParams.Id}, function () {
-            $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type});
+            $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type}, function () {
+                var fields = $scope.documentType.Fields;
+                for (var i = 0; i < fields.length; i++) {
+                    var subfields = [];
+                    for (var subfield_index = 0; subfield_index < fields[i].Max; subfield_index++) {
+                        subfields[subfield_index] = {"index": subfield_index, "required": subfield_index <= fields[i].Min};
+                    }
+                    $scope.documentType.Fields[i].subfields = subfields;
+                }
+            });
         });
 
         $scope.editDocument = function() {
