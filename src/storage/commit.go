@@ -1,5 +1,5 @@
 package storage
 
-type Commit struct {
-	Tree Tree
+type commit struct {
+	tree tree
 }

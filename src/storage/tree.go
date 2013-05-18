@@ -1,5 +1,5 @@
 package storage
 
-type Tree struct {
-	Root Node
+type tree struct {
+	root node
 }

@@ -1,5 +1,5 @@
 package storage
 
-type Tag struct {
-	Root Node
+type tag struct {
+	root node
 }

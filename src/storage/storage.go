@@ -1,40 +1,30 @@
 package storage
 
 import (
-	"crypto/sha1"
-	"encoding/json"
-	"fmt"
-	"io"
-	"io/ioutil"
+	"strings"
 )
 
-func load(shasum string, value *interface{}) error {
-	file, readErr := ioutil.ReadFile(fmt.Sprintf("data/%s", shasum))
-	if readErr != nil {
-		return readErr
+func split_path(path string) []string {
+	if path == "/" {
+		return make([]string, 0)
 	}
-	jsonErr := json.Unmarshal(file, &value)
-	if jsonErr != nil {
-		return jsonErr
+	result := strings.Split(path, "/")
+	out := make([]string, len(result))
+	out_index := 0
+	for _, part := range result[1:] {
+		if part != "" {
+			out[out_index] = part
+			out_index++
+		}
 	}
-	return nil
+	return out[:out_index]
 }
 
-func save(value *interface{}) error {
-	data, jsonErr := json.Marshal(value)
-	if jsonErr != nil {
-		return jsonErr
+func contains(slice []string, value string) bool {
+	for _, v := range slice {
+		if v == value {
+			return true
+		}
 	}
-	filename := fmt.Sprintf("data/%s", sha1sum(string(data)))
-	writeErr := ioutil.WriteFile(filename, data, 0755)
-	if writeErr != nil {
-		return writeErr
-	}
-	return nil
-}
-
-func sha1sum(str string) string {
-	h := sha1.New()
-	io.WriteString(h, str)
-	return fmt.Sprintf("%x", h.Sum(nil))
+	return false
 }
