@@ -7,6 +7,9 @@
 _obj
 _test
 
+*.sublime-project
+*.sublime-workspace
+
 # Architecture specific extensions/prefixes
 *.[568vq]
 [568vq].out
@@ -22,6 +25,7 @@ _testmain.go
 *.exe
 
 src/github.com
+src/code.google.com
 src/dcms
 src/storage/data/*
 data/*

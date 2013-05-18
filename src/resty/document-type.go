@@ -3,6 +3,7 @@ package resty
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/extemporalgenome/slug"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
@@ -85,7 +86,7 @@ func PostDocumentType(response http.ResponseWriter, request *http.Request) {
 	if RestError(jsonErr, response) {
 		return
 	}
-	doc.Id = uuid()
+	doc.Id = slug.Slug(doc.Name)
 	out, marsErr := json.Marshal(doc)
 	if RestError(marsErr, response) {
 		return

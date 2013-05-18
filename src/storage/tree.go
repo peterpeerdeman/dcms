@@ -77,3 +77,24 @@ func (this *tree) resolve(filename string, create bool) (*node, error) {
 	}
 	return cur, nil
 }
+
+func (this *tree) remove(filename string) error {
+	cur := this.Root
+	path := split_path(filename)
+	if len(path) == 0 {
+		return errors.New("Cannot remove the root node.")
+	}
+	for index, part := range path {
+		last := index == len(path)-1
+		if last {
+			delete(cur.Children, part)
+			return nil
+		}
+		next, ok := cur.Children[part]
+		if !ok {
+			return errors.New(fmt.Sprintf("Couldn't resolve %s", part))
+		}
+		cur = next
+	}
+	return errors.New("Cannot find the removable node.")
+}

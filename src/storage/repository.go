@@ -63,8 +63,8 @@ func (this *Repository) Add(filename string, content []byte) error {
 	return nil
 }
 
-func (this *Repository) Remove(filename string) {
-
+func (this *Repository) Remove(filename string) error {
+	return this.Head.remove(filename)
 }
 
 func (this *Repository) Copy(from string, to string) {
