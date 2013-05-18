@@ -13,7 +13,7 @@ angular.module('dcms.controllers', [])
         $scope.newName = '';
         $scope.documents = DocumentStorage.query();
         $scope.documentType = '';
-        $scope.orderProp = 'name';
+        $scope.orderProp = 'Name';
 
         $scope.addDocument = function () {
             if (!$scope.newName.length) {
@@ -102,6 +102,10 @@ angular.module('dcms.controllers', [])
 
         $scope.saveDocumentType = function() {
             $scope.documentType.$update({id: $scope.documentType.Id});
+        };
+        $scope.deleteDocumentType = function() {
+            $scope.documentType.$delete({id: $scope.documentType.Id});
+            $location.url('/');
         };
         $scope.removeField = function(field) {
             var index = $scope.documentType.Fields.indexOf(field);

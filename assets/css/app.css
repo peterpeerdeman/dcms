@@ -1,0 +1,25 @@
+markdown select{
+    position: relative;
+    left: 30%;
+    margin-left:20px;
+}
+markdown textarea{
+    float:left;
+    width:30%;
+    margin-right:20px;
+    min-height: 200px;
+}
+
+markdown .preview{
+    display:inline-block;
+    width:50%;
+    min-height: 190px;
+}
+
+.autosize {
+    vertical-align: top;
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
+}
+
