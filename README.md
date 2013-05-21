@@ -4,16 +4,13 @@ dcms
 Content Management System build in Go and AngularJS.
 
 ```bash
+cd path/to/dcms
+
 set GOPATH=`pwd`
 
 make fetch
-
-go install mysite
-go install site
-go install resty
-go build src/dcms.go
+make
 ./dcms.exe
-
 ```
 
 

@@ -32,9 +32,9 @@
             <div class="controls" ng-switch="field.Type">
                 <div ng-switch-when="string">
                     <div ng-repeat="subfield in field.subfields">
-                        <input ng-show="isVisible(field.Name,subfield.index)" ng-model="document.Fields[field.Name][subfield.index]" placeholder="{{field.Name}}" type="text"/>
+                        <input ng-show="isVisible(field.Name, subfield.index)" ng-model="document.Fields[field.Name][subfield.index]" type="text" />
                     </div>
-                    <button ng-show="isAddable(field.Name,field.Max)" class="btn btn-primary" ng-click="addField(field.Name)">Add field</button>
+                    <button ng-show="isAddable(field.Name, field.Max)" class="btn btn-primary" ng-click="addField(field.Name)">Add field</button>
                 </div>
                 <div ng-switch-when="textarea">
                     <textarea ng-model="document.Fields[field.Name]" placeholder="{{field.Name}}" cols="10"></textarea>

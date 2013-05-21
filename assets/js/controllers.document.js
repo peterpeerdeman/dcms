@@ -36,21 +36,32 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
             var fields = $scope.documentType.Fields;
             for (var i = 0; i < fields.length; i++) { 
                 var field = fields[i];
-                var subfields = [];
-                for (var subfield_index = 0; subfield_index < fields[i].Max; subfield_index++) {
-                    subfields[subfield_index] = {"index": subfield_index, "required": subfield_index < fields[i].Min};
-                }
-                $scope.documentType.Fields[i].subfields = subfields;
-                if ($scope.document.Fields[field.Name] == undefined) {
+
+                // initialize the Field on the document
+                if ($scope.document.Fields[field.Name] === undefined) {
                     $scope.document.Fields[field.Name] = new Array();
                 } 
-            }
 
-            for (var i=0; $scope.documentType.Fields.length > i; i++){
-                var field = $scope.documentType.Fields[i];
-                $scope.count[field.Name] = field.Min;
-            }
+                // try and determine the minimum shown subfields
+                var min = 0;
+                for (var subfield_index = 0; subfield_index < field.Max; subfield_index++) {
+                    if (subfield_index < field.Min) {
+                        min = subfield_index;
+                    }
+                    if ($scope.document.Fields[field.Name][subfield_index]) {
+                        min = subfield_index;
+                    }
+                }
+                $scope.count[field.Name] = min;
 
+                // contruct the subfields
+                var subfields = [];
+                for (var subfield_index = 0; subfield_index < field.Max; subfield_index++) {
+                    subfields[subfield_index] = {"index": subfield_index, "required": subfield_index <= min};
+                }
+                $scope.documentType.Fields[i].subfields = subfields;
+            }
+            console.log($scope.count);
         });
     });
 
@@ -65,12 +76,11 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
     };
 
     $scope.isVisible = function(name, index){
-        return ($scope.document.Fields[name][index] !== undefined && $scope.document.Fields[name][index].length > 0) || $scope.count[name] > index ;
+        return $scope.count[name] >= index;
     };
 
     $scope.isAddable = function(name, max){
-        console.log($scope.count[name]);
-        return max > $scope.count[name];
+        return $scope.count[name] < max - 1;
     };
 
     $scope.addField = function(fieldName){
