@@ -2,13 +2,7 @@ package resty
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/extemporalgenome/slug"
-	"github.com/gorilla/mux"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"storage"
 )
 
 type Document struct {
@@ -19,85 +13,51 @@ type Document struct {
 	Fields map[string]interface{}
 }
 
-func AllDocument(response http.ResponseWriter, request *http.Request) {
-	docs, listErr := storage.Repo.List("/documents")
-	if listErr != nil {
-		return
-	}
-	var resp []Document
-	for _, file := range docs {
-		data, getErr := storage.Repo.Get(fmt.Sprintf("/documents/%s", file))
-		if getErr == nil {
-			var doc Document
-			err := json.Unmarshal(data, &doc)
-			if err == nil {
-				resp = append(resp, doc)
-			}
-		} else {
-			log.Printf("Unable to get %v", file)
-		}
-	}
-	out, jsonErr := json.Marshal(resp)
-	if RestError(jsonErr, response) {
-		return
-	}
-	response.Header().Set("Document-Type", "application/json")
-	response.Write(out)
+type DocumentManager struct {
 }
 
-func GetDocument(response http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	id := vars["id"]
-	out, getErr := storage.Repo.Get(fmt.Sprintf("/documents/%s", id))
-	if RestError(getErr, response) {
-		return
-	}
-	response.Header().Set("Document-Type", "application/json")
-	response.Write(out)
-}
-
-func PutDocument(response http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	id := vars["id"]
-	bodyBytes, readErr := ioutil.ReadAll(request.Body)
-	if RestError(readErr, response) {
-		return
-	}
-	addErr := storage.Repo.Add(fmt.Sprintf("/documents/%s", id), bodyBytes)
-	if RestError(addErr, response) {
-		return
-	}
-	response.Header().Set("Document-Type", "application/json")
-	response.Write(bodyBytes)
-}
-
-func PostDocument(response http.ResponseWriter, request *http.Request) {
-	bodyBytes, readErr := ioutil.ReadAll(request.Body)
-	if RestError(readErr, response) {
-		return
-	}
-	var doc Document
-	jsonErr := json.Unmarshal(bodyBytes, &doc)
-	if RestError(jsonErr, response) {
-		return
-	}
-	doc.Id = slug.Slug(doc.Name)
+func (this *DocumentManager) Create() interface{} {
+	doc := new(Document)
 	doc.Fields = make(map[string]interface{})
-	out, marsErr := json.Marshal(doc)
-	if RestError(marsErr, response) {
-		return
-	}
-	addErr := storage.Repo.Add(fmt.Sprintf("/documents/%s", doc.Id), out)
-	if RestError(addErr, response) {
-		return
-	}
-	response.Header().Set("Document-Type", "application/json")
-	response.Write(out)
+	return doc
 }
 
-func DeleteDocument(response http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	id := vars["id"]
-	storage.Repo.Remove(fmt.Sprintf("/documents/%s", id))
-	response.Header().Set("Document-Type", "application/json")
+func (this *DocumentManager) MakeCollection() TypeCollection {
+	collection := new(DocumentCollection)
+	collection.documents = make([]Document, 0)
+	return collection
+}
+
+func (this *DocumentManager) Bootstrap(in interface{}) interface{} {
+	doc := in.(*Document)
+	doc.Id = slug.Slug(doc.Name)
+	return doc
+}
+
+func (this *DocumentManager) Serialize(in interface{}) ([]byte, error) {
+	data, err := json.Marshal(in)
+	return data, err
+}
+
+func (this *DocumentManager) Deserialize(data []byte) (interface{}, error) {
+	var doc Document
+	err := json.Unmarshal(data, &doc)
+	return doc, err
+}
+
+func (this *DocumentManager) Identifier(in interface{}) string {
+	return in.(*Document).Id
+}
+
+type DocumentCollection struct {
+	documents []Document
+}
+
+func (this *DocumentCollection) Append(document interface{}) {
+	this.documents = append(this.documents, document.(Document))
+}
+
+func (this *DocumentCollection) Serialize() ([]byte, error) {
+	data, err := json.Marshal(this.documents)
+	return data, err
 }

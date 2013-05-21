@@ -32,7 +32,6 @@ dcmsControllers.controller('EditDocumentTypeCtrl', function EditDocumentCtrl($sc
     $scope.newDocumentField = {};
 
     $scope.addField = function() {
-
         if ($scope.documentType.Fields == null){
             $scope.documentType.Fields = [];
         }

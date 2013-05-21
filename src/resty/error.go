@@ -1,21 +1,22 @@
 package resty
 
 import (
-	"net/http"
-	"log"
-	"fmt"
-	"runtime/debug"
 	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"runtime/debug"
 )
 
 type ErrorMessage struct {
 	Message string
-	Stack string
+	Stack   string
 }
 
 func RestError(err error, response http.ResponseWriter) bool {
 	if err != nil {
 		log.Printf("%v", err)
+		log.Printf("%v", string(debug.Stack()))
 		var errorMsg ErrorMessage
 		errorMsg.Message = fmt.Sprintf("%v", err)
 		errorMsg.Stack = string(debug.Stack())
