@@ -29,10 +29,25 @@
 
         </form>
 
-        <ul>
-            <li ng-repeat="document in documents | filter:query | orderBy:orderProp">
-                <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}} {{document.Type}}</a>
-            </li>
-        </ul>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>path</th>
+                    <th>name</th>
+                    <th>type</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="document in documents | filter:query | orderBy:orderProp">
+                    <td>{{document.Id}}</td>
+                    <td>{{document.Path}}</td>
+                    <td>{{document.Name}}</td>
+                    <td>{{document.Type}}</td>
+                    <td><a href="#/document/edit/{{document.Id}}">edit</a></td> 
+                </tr>
+            </tbody>
+        </table>
     </section>
 </div>
