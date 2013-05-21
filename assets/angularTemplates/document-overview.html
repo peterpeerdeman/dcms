@@ -1,25 +1,38 @@
-<h1>Document overview</h1>
+<div class="span3">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">Documents</li>
+            <li ng-repeat="doc in documents">
+                <a href="#/document/edit/{{doc.Id}}" ng-class="{active: doc.Id == document.Id}">{{doc.Name}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
 
-<a class="btn btn-primary" href="#/document/new">Create a document</a>
+<div class="span9">
+    <h1>Document overview</h1>
 
-<h2>Documents</h2>
+    <a class="btn btn-primary" href="#/document/new">Create a document</a>
 
-<section class="overview">
+    <h2>Documents</h2>
 
-    <form class="form-inline">
-        <input ng-model="query" id="inputSearch" class="input-medium search-query" placeholder="Search">
+    <section class="overview">
 
-        <select id="order" ng-model="orderProp">
-            <option value="Name">Alphabetical</option>
-            <option value="Type">Type</option>
-            <option value="Id">Id</option>
-        </select>
+        <form class="form-inline">
+            <input ng-model="query" id="inputSearch" class="input-medium search-query" placeholder="Search">
 
-    </form>
+            <select id="order" ng-model="orderProp">
+                <option value="Name">Alphabetical</option>
+                <option value="Type">Type</option>
+                <option value="Id">Id</option>
+            </select>
 
-    <ul>
-        <li ng-repeat="document in documents | filter:query | orderBy:orderProp">
-            <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}} {{document.Type}}</a>
-        </li>
-    </ul>
-</section>
+        </form>
+
+        <ul>
+            <li ng-repeat="document in documents | filter:query | orderBy:orderProp">
+                <a href="#/document/edit/{{document.Id}}">{{document.Id}} {{document.Path}} {{document.Name}} {{document.Type}}</a>
+            </li>
+        </ul>
+    </section>
+</div>

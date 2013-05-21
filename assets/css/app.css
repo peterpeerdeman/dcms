@@ -23,3 +23,7 @@ markdown .preview{
     transition: height 0.2s;
 }
 
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}

@@ -66,12 +66,12 @@ angular.module('dcms.controllers', [])
 
         $scope.editDocument = function() {
             $scope.document.$update({id: $scope.document.Id});
-            $location.url('/');
+            $location.url('/document/overview');
         };
 
         $scope.deleteDocument = function() {
             $scope.document.$delete({id: $scope.document.Id});
-            $location.url('/');
+            $location.url('/document/overview');
         };
 
         $scope.isVisible = function(name, index){

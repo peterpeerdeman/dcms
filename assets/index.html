@@ -9,8 +9,8 @@
 
 
     <link href="/cms/assets/bootstrap/css/bootstrap.css" rel="stylesheet" />
-    <link href="/cms/assets/awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="/cms/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/cms/assets/awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="/cms/assets/css/app.css" rel="stylesheet" />
     <link href="/cms/assets/jquery/jquery-ui.css" rel="stylesheet">
 
@@ -27,43 +27,47 @@
     <link rel="shortcut icon" href="/cms/assets/bootstrap/ico/favicon.png">
 </head>
 <body>
-
-<div class="container">
-
-    <h3 class="muted">dCMS</h3>
-
-    <div class="navbar">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
-            <ul class="nav nav-pills">
-                <li><a href="#/">Dashboard</a></li>
-                <li><a href="#/document/overview">Documents</a></li>
-                <li><a href="#/document-type/overview">Document types</a></li>
-                <li><a href="#/channel/overview">Channels</a></li>
-                <li><a href="#/template/overview">Templates</a></li>
-                <li><a href="#/pages/overview">Pages</a></li>
-                <li><a href="#/fileupload">File upload</a></li>
-                <li><a href="#/sitemap/overview">Sitemap</a></li>
-            </ul>
+            <div class="container-fluid">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <a class="brand">dCMS</a>
+                <ul class="nav nav-pills">
+                    <li><a href="#/">Dashboard</a></li>
+                    <li><a href="#/document/overview">Documents</a></li>
+                    <li><a href="#/document-type/overview">Document types</a></li>
+                    <li><a href="#/channel/overview">Channels</a></li>
+                    <li><a href="#/template/overview">Templates</a></li>
+                    <li><a href="#/pages/overview">Pages</a></li>
+                    <li><a href="#/fileupload">File upload</a></li>
+                    <li><a href="#/sitemap/overview">Sitemap</a></li>
+                </ul>
+            </div>
         </div>
     </div>
+    <div class="container-fluid">
+        <div class="row-fluid" ng-view></div>
+    </div>
 
-    <div class="row-fluid" ng-view></div>
+    <!-- libraries -->
+    <script src="/cms/assets/jquery/jquery.js"></script>
+    <script src="/cms/assets/jquery/jquery-ui.js"></script>
+    <script src="/cms/assets/jquery/jquery.autosize-min.js"></script>
+    <script src="/cms/assets/bootstrap/js/bootstrap.js"></script>
+    <script src="/cms/assets/lib/showdown.js"></script>
+    <script src="/cms/assets/angular/angular.js"></script>
+    <script src="/cms/assets/angular/angular-resource.js"></script>
+    <script src="/cms/assets/angular/angular-ui.js"></script>
 
-</div>
-
-<script src="/cms/assets/jquery/jquery.js"></script>
-<script src="/cms/assets/jquery/jquery-ui.js"></script>
-<script src="/cms/assets/jquery/jquery.autosize-min.js"></script>
-<script src="/cms/assets/bootstrap/js/bootstrap.js"></script>
-<script src="/cms/assets/lib/showdown.js"></script>
-<script src="/cms/assets/angular/angular.js"></script>
-<script src="/cms/assets/angular/angular-resource.js"></script>
-<script src="/cms/assets/angular/angular-ui.js"></script>
-
-<script src="/cms/assets/js/app.js"></script>
-<script src="/cms/assets/js/services.js"></script>
-<script src="/cms/assets/js/controllers.js"></script>
-<script src="/cms/assets/js/filters.js"></script>
-<script src="/cms/assets/js/directives.js"></script>
+    <!-- dcms js -->
+    <script src="/cms/assets/js/app.js"></script>
+    <script src="/cms/assets/js/services.js"></script>
+    <script src="/cms/assets/js/controllers.js"></script>
+    <script src="/cms/assets/js/filters.js"></script>
+    <script src="/cms/assets/js/directives.js"></script>
 </body>
 </html>

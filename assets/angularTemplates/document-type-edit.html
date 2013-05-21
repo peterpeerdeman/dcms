@@ -1,65 +1,76 @@
-<h1 xmlns="">Edit document type: {{documentType.Name}}</h1>
+<div class="span3">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">Document-types</li>
+            <li ng-repeat="type in documentTypes">
+                <a href="#/document-type/edit/{{type.Id}}">{{type.Name}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
 
-<ul ui-sortable ng-model="documentType.Fields">
-    <li class="control-group" ng-repeat="field in documentType.Fields">
-        <div ng-switch="field.Type" class="form-horizontal">
-            <div ng-switch-when="string">
-                Name: {{field.Name}}
-                Min: {{field.Min}}
-                Max: {{field.Max}}
-                <input type="text" disabled>
-                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+<div class="span9">
+
+    <h1>Edit document type: {{documentType.Name}}</h1>
+
+    <ul ui-sortable ng-model="documentType.Fields">
+        <li class="control-group" ng-repeat="field in documentType.Fields">
+            <div ng-switch="field.Type" class="form-horizontal">
+                <div ng-switch-when="string">
+                    Name: {{field.Name}}
+                    Min: {{field.Min}}
+                    Max: {{field.Max}}
+                    <input type="text" disabled>
+                    <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+                </div>
+                <div ng-switch-when="textarea">
+                    Name: {{field.Name}}
+                    Min: {{field.Min}}
+                    Max: {{field.Max}}
+                    <textarea rows="5" cols="10" disabled></textarea>
+                    <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+                </div>
+                <div ng-switch-when="html">
+                    <p>Html editor</p>
+                    <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+                </div>
+                <div ng-switch-when="date">
+                    <label for="{{field.Name}}">{{field.Name}}</label>
+                    <input id="{{field.Name}}" type="text" disabled>
+
+                    <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+                </div>
+                <div ng-switch-when="file">
+                    <label for="{{field.Name}}">{{field.Name}}</label>
+                    <input id="{{field.Name}}" type="text" disabled>
+
+                    <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
+                </div>
             </div>
-            <div ng-switch-when="textarea">
-                Name: {{field.Name}}
-                Min: {{field.Min}}
-                Max: {{field.Max}}
-                <textarea rows="5" cols="10" disabled></textarea>
-                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
-            </div>
-            <div ng-switch-when="html">
-                <p>Html editor</p>
-                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
-            </div>
-            <div ng-switch-when="date">
-                <label for="{{field.Name}}">{{field.Name}}</label>
-                <input id="{{field.Name}}" type="text" disabled>
+        </li>
+    </ul>
 
-                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
-            </div>
-            <div ng-switch-when="file">
-                <label for="{{field.Name}}">{{field.Name}}</label>
-                <input id="{{field.Name}}" type="text" disabled>
+    <form name="form" class="form-horizontal">
+        <input type="hidden" ng-model="documentType.Id">
+        <label for="name">Name</label>
+        <input id="name" type="text" ng-model="newDocumentField.Name" required>
+        <label for="type">Type</label>
+        <select id="type" ng-model="newDocumentField.Type" required>
+            <option></option>
+            <option value="string">String</option>
+            <option value="textarea">Text area</option>
+            <option value="html">Html editor</option>
+            <option value="date">Date</option>
+            <option value="file">File upload</option>
+        </select>
+        <label for="min">Min</label>
+        <input id="min" type="number" ng-model="newDocumentField.Min" required>
+        <label for="max">Max</label>
+        <input id="max" type="number" ng-model="newDocumentField.Max" required>
+        <button type="submit" class="btn btn-primary" ng-click="addField()" ng-disabled="form.$invalid">Add</button>
+    </form>
+    <button type="submit" class="btn btn-primary" ng-click="saveDocumentType()">Save</button>
+    <button type="submit" class="btn btn-warning" ng-click="deleteDocumentType()">Delete</button>
 
-                <button class="btn btn-primary" ng-click="removeField(field)">Remove field</button>
-            </div>
-        </div>
-    </li>
-</ul>
-
-<form name="form" class="form-horizontal">
-    <input type="hidden" ng-model="documentType.Id">
-    <label for="name">Name</label>
-    <input id="name" type="text" ng-model="newDocumentField.Name" required>
-    <label for="type">Type</label>
-    <select id="type" ng-model="newDocumentField.Type" required>
-        <option></option>
-        <option value="string">String</option>
-        <option value="textarea">Text area</option>
-        <option value="html">Html editor</option>
-        <option value="date">Date</option>
-        <option value="file">File upload</option>
-    </select>
-    <label for="min">Min</label>
-    <input id="min" type="number" ng-model="newDocumentField.Min" required>
-    <label for="max">Max</label>
-    <input id="max" type="number" ng-model="newDocumentField.Max" required>
-    <button type="submit" class="btn btn-primary" ng-click="addField()" ng-disabled="form.$invalid">Add</button>
-</form>
-<button type="submit" class="btn btn-primary" ng-click="saveDocumentType()">Save</button>
-<button type="submit" class="btn btn-warning" ng-click="deleteDocumentType()">Delete</button>
-
-<div id="fields"></div>
-
-{{documentType}} <br/> <br/>
-{{documentTypes}}
+    <div id="fields"></div>
+</div>

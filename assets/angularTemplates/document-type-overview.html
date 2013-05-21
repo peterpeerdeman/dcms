@@ -1,27 +1,39 @@
-<h1>Document-type overview</h1>
+<div class="span3">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">Document-types</li>
+            <li ng-repeat="type in documentTypes">
+                <a href="#/document-type/edit/{{type.Id}}">{{type.Name}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
 
-<a class="btn btn-primary" href="#/document-type/new">Create a document type</a>
+<div class="span9">
+    <h1>Document-type overview</h1>
 
-<h2>Document types</h2>
+    <a class="btn btn-primary" href="#/document-type/new">Create a document type</a>
 
-<section class="overview">
+    <h2>Document types</h2>
 
-    <!--<form class="form-inline">-->
-        <!--<input ng-model="query" id="inputSearch" class="input-medium search-query" placeholder="Search">-->
+    <section class="overview">
 
-        <!--<select id="order" ng-model="orderProp">-->
-            <!--<option value="Name">Alphabetical</option>-->
-            <!--<option value="Type">Type</option>-->
-            <!--<option value="Id">Id</option>-->
-        <!--</select>-->
+        <!--<form class="form-inline">-->
+            <!--<input ng-model="query" id="inputSearch" class="input-medium search-query" placeholder="Search">-->
 
-    <!--</form>-->
+            <!--<select id="order" ng-model="orderProp">-->
+                <!--<option value="Name">Alphabetical</option>-->
+                <!--<option value="Type">Type</option>-->
+                <!--<option value="Id">Id</option>-->
+            <!--</select>-->
 
-    <ul>
-        <li ng-repeat="documentType in documentTypes | filter:query | orderBy:orderProp">
-            <a href="#/document-type/edit/{{documentType.Id}}">{{documentType.Id}} {{documentType.Name}}</a>
-        </li>
-    </ul>
-</section>
+        <!--</form>-->
 
+        <ul>
+            <li ng-repeat="documentType in documentTypes | filter:query | orderBy:orderProp">
+                <a href="#/document-type/edit/{{documentType.Id}}">{{documentType.Id}} {{documentType.Name}}</a>
+            </li>
+        </ul>
+    </section>
 
+</div>
