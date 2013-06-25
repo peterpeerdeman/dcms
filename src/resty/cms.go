@@ -2,6 +2,7 @@ package resty
 
 import (
 	"github.com/gorilla/mux"
+	"go.net/websocket"
 	"net/http"
 )
 
@@ -32,6 +33,8 @@ func Cms() {
 	router.HandleFunc("/rest/file/{id}", BuildGet(fileManager, "files")).Methods("GET")
 	router.HandleFunc("/rest/file/{id}", BuildPut(fileManager, "files")).Methods("PUT")
 	router.HandleFunc("/rest/file/{id}", BuildDelete(fileManager, "files")).Methods("DELETE")
+
+	http.Handle("/notification", websocket.Handler(CreateNotificationServer()))
 
 	http.Handle("/rest/", router)
 
