@@ -2,14 +2,15 @@ package site
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"github.com/howeyc/fsnotify"
+	"io/ioutil"
 	"log"
+	"resty"
 	"time"
 )
 
 var SiteConfiguration struct {
-	Channels map[string] Channel
+	Channels map[string]Channel
 }
 
 func WatchConfiguration(configFile string) error {
@@ -39,6 +40,7 @@ func WatchConfiguration(configFile string) error {
 
 func readConfiguration(configFile string) error {
 	log.Printf("Loading configuration...")
+	resty.NotificationChannel <- resty.Notification{"configuration", "Configuration reloaded"}
 	file, readErr := ioutil.ReadFile(configFile)
 	if readErr != nil {
 		return readErr

@@ -91,6 +91,10 @@ func BuildPost(Manager TypeManager, Path string) func(http.ResponseWriter, *http
 		if RestError(addErr, response) {
 			return
 		}
+		commitErr := storage.Repo.Commit("this is a commit message")
+		if RestError(commitErr, response) {
+			return
+		}
 		response.Header().Set("Document-Type", "application/json")
 		response.Write(out)
 	}

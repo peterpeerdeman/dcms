@@ -49,6 +49,7 @@ func writer(ws *websocket.Conn, observers *list.List) {
 				log.Printf("Channel closed")
 				return
 			}
+			log.Printf("Sending %v", notification)
 			err := websocket.JSON.Send(ws, notification)
 			if err != nil {
 				log.Printf("writer() %v", err)

@@ -10,9 +10,9 @@ type tree struct {
 }
 
 func newTree() *tree {
-	var cur tree
+	cur := new(tree)
 	cur.Root = newNode()
-	return &cur
+	return cur
 }
 
 func (this *tree) list(filename string) ([]string, error) {

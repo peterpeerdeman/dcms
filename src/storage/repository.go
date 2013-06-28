@@ -5,7 +5,8 @@ import (
 )
 
 type Repository struct {
-	Head *tree
+	Master *commit
+	Head   *tree
 }
 
 var Repo *Repository
@@ -21,10 +22,10 @@ func Init() {
 		return
 	}
 	log.Printf("Creating new repository.")
-	var newRepository Repository
+	newRepository := new(Repository)
 	newRepository.Head = newTree()
-	save_repo("head.json", &newRepository)
-	Repo = &newRepository
+	save_repo("head.json", newRepository)
+	Repo = newRepository
 }
 
 func (this *Repository) Get(filename string) ([]byte, error) {
@@ -79,8 +80,14 @@ func (this *Repository) Merge(from string, to string) {
 
 }
 
-func (this *Repository) Commit(message string) {
-
+func (this *Repository) Commit(message string) error {
+	commit := newCommit(this.Master, message, this.Head)
+	this.Master = commit
+	saveErr := save_repo("head.json", this)
+	if saveErr != nil {
+		return saveErr
+	}
+	return nil
 }
 
 func (this *Repository) Branch(name string) {
