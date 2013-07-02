@@ -1,11 +1,11 @@
 'use strict';
 
-dcmsControllers.controller('DashboardCtrl', function DashboardCtrl($scope) {
+dcmsControllers.controller('DashboardCtrl', function DashboardCtrl($scope, Socket) {
 	$scope.sendMessage = function() {
 		console.log('Send message...');
-		notificationChannel.send('aapje', {field1: 'aapje123', message: "Rofl!"});
+		Socket.send('aapje', {field1: 'aapje123', message: "Rofl!"});
 	};// empty?
-	notificationChannel.on('aapje', function(data) {
+	Socket.on('aapje', function(data) {
 		console.log('Recieved an aapje', data);
 	});
 });

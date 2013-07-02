@@ -17,17 +17,3 @@ angular.module('dcms', ['dcms.filters', 'dcms.services', 'dcms.directives', 'dcm
     $routeProvider.when('/fileupload', {templateUrl: '/cms/assets/angularTemplates/fileupload.html', controller: 'FileuploadCtrl'});
     $routeProvider.otherwise({redirectTo: '/'});
   }]);
-
-
-var notificationChannel = $.websocket("ws://localhost:8080/notification", {
-        open: function() { console.log('websocket open'); },
-        close: function() { console.log('websocket closed'); },
-        events: {
-                ping: function(e) {
-                  console.log('got ping', e);
-                },
-                configuration: function(e) {
-                    console.log('Configuration was changed', e);
-                }
-        }
-});
