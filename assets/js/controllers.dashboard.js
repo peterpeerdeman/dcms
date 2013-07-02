@@ -3,6 +3,9 @@
 dcmsControllers.controller('DashboardCtrl', function DashboardCtrl($scope) {
 	$scope.sendMessage = function() {
 		console.log('Send message...');
-		ws.send('ping', {field1: 'aapje', message: "Rofl!"});
+		notificationChannel.send('aapje', {field1: 'aapje123', message: "Rofl!"});
 	};// empty?
+	notificationChannel.on('aapje', function(data) {
+		console.log('Recieved an aapje', data);
+	});
 });

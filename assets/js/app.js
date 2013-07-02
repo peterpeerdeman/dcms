@@ -19,7 +19,7 @@ angular.module('dcms', ['dcms.filters', 'dcms.services', 'dcms.directives', 'dcm
   }]);
 
 
-var ws = $.websocket("ws://localhost:8080/notification", {
+var notificationChannel = $.websocket("ws://localhost:8080/notification", {
         open: function() { console.log('websocket open'); },
         close: function() { console.log('websocket closed'); },
         events: {

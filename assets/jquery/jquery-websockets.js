@@ -29,7 +29,10 @@ $.extend({
 				var m = $.parseJSON(e.originalEvent.data);
 				var h = $.websocketSettings.events[m.type];
 				if (h) h.call(this, m);
-			});
+			})
+		ws.on = function(type, functor) {
+			$.websocketSettings.events[type] = functor;
+		};
 		ws._settings = $.extend($.websocketSettings, s);
 		ws._send = ws.send;
 		ws.send = function(type, data) {
