@@ -40,7 +40,7 @@ func WatchConfiguration(configFile string) error {
 
 func readConfiguration(configFile string) error {
 	log.Printf("Loading configuration...")
-	resty.NotificationChannel <- resty.Notification{"configuration", "Configuration reloaded"}
+	resty.NotificationChannel <- resty.Notification{"configuration", "", "Configuration reloaded"}
 	file, readErr := ioutil.ReadFile(configFile)
 	if readErr != nil {
 		return readErr

@@ -8,8 +8,9 @@ import (
 )
 
 type Notification struct {
-	Type string `json:"type"`
-	Msg  string `json:"msg"`
+	Type string      `json:"type"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 var NotificationChannel = make(chan Notification)
