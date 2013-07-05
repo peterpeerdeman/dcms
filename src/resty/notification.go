@@ -8,9 +8,17 @@ import (
 )
 
 type Notification struct {
-	Type string      `json:"type"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	Type   string      `json:"type"`
+	Msg    string      `json:"msg"`
+	Data   interface{} `json:"data"`
+	sender *websocket.Conn
+}
+
+func NewNotification(Type string, Msg string) *Notification {
+	notification := new(Notification)
+	notification.Type = Type
+	notification.Msg = Msg
+	return notification
 }
 
 var NotificationChannel = make(chan Notification)
@@ -35,6 +43,7 @@ func reader(ws *websocket.Conn) {
 			log.Printf("reader() %v", err)
 			return
 		}
+		notification.sender = ws
 		NotificationChannel <- notification
 	}
 }
@@ -50,11 +59,15 @@ func writer(ws *websocket.Conn, observers *list.List) {
 				log.Printf("Channel closed")
 				return
 			}
-			log.Printf("Sending %v", notification)
-			err := websocket.JSON.Send(ws, notification)
-			if err != nil {
-				log.Printf("writer() %v", err)
-				return
+			if notification.sender == ws {
+				log.Printf("Not sending to self.")
+			} else {
+				log.Printf("Sending %v", notification)
+				err := websocket.JSON.Send(ws, notification)
+				if err != nil {
+					log.Printf("writer() %v", err)
+					return
+				}
 			}
 		}
 	}

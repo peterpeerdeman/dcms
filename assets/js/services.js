@@ -53,10 +53,10 @@ services.factory('Socket', function($resource){
         close: function() { console.log('websocket closed'); },
         events: {
             ping: function(e) {
-                console.log('got ping', e);
+                // console.log('got ping', e);
             },
             configuration: function(e) {
-                console.log('Configuration was changed', e);
+                // console.log('Configuration was changed', e);
             }
         }
     });

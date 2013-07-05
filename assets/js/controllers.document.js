@@ -28,9 +28,10 @@ dcmsControllers.controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $
     }
 });
 
-dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage) {
+dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage, Socket) {
     $scope.count = {};
     $scope.documents = DocumentStorage.query();
+    var updating = false;
     $scope.document = DocumentStorage.get({id: $routeParams.Id}, function () {
         $scope.documentType = DocumentTypeStorage.get({id: $scope.document.Type}, function () {
             var fields = $scope.documentType.Fields;
@@ -62,8 +63,60 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
                 $scope.documentType.Fields[i].subfields = subfields;
             }
             console.log($scope.count);
+
+            // watch for changes
+            $scope.$watch('document', watchForChanges, true);
+            $scope.original = JSON.stringify($scope.document);
+            Socket.on('document.'+$scope.document.Id, onRecieveChange);
         });
     });
+
+    $scope.documentDirty = false;
+    $scope.documentUpdating = false;
+
+    function watchForChanges(newValue, oldValue) {
+        if (newValue && !$scope.documentUpdating) {
+            $scope.documentDirty = true;
+        }
+    }
+
+    function sendChanges(newValue, oldValue) {
+        if (newValue) {
+            var oldHash = Hashcode.value($scope.original);
+            var newJson = JSON.stringify($scope.document);
+            var newHash = Hashcode.value(newJson);
+            if (oldHash != newHash) {
+                var differ = new diff_match_patch();
+                var patch = differ.patch_make($scope.original, newJson);
+                Socket.send('document.' + $scope.document.Id, {'hash': oldHash, 'patch': patch});
+            }
+        }
+    }
+
+    function onRecieveChange(message) {
+        console.log('Recieved a document update', message);
+        $scope.$apply(function () {
+            $scope.documentUpdating = true;
+            var current = JSON.stringify($scope.document);
+            var differ = new diff_match_patch();
+            var patchedDocument = differ.patch_apply(message.data.patch, current);
+            $scope.document = JSON.parse(patchedDocument[0]);
+            $scope.original = JSON.stringify($scope.document);
+            $scope.documentUpdating = false;
+        });
+    }
+
+    function waiter() {
+        if ($scope.documentDirty && !$scope.documentUpdating) {
+            $scope.documentDirty = false;
+            sendChanges($scope.document, $scope.original);
+            $scope.$apply(function () {
+                $scope.original = JSON.stringify($scope.document);
+            });
+        }
+        setTimeout(waiter, 1000);
+    }
+    setTimeout(waiter, 1000);
 
     $scope.saveDocument = function() {
         $scope.document.$update({id: $scope.document.Id});
