@@ -28,7 +28,7 @@ dcmsControllers.controller('NewDocumentCtrl', function NewDocumentCtrl($scope, $
     }
 });
 
-dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage, Socket) {
+dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope, $routeParams, DocumentStorage, $location, DocumentTypeStorage, FileStorage, Socket) {
     $scope.count = {};
     $scope.documents = DocumentStorage.query();
     var updating = false;
@@ -94,6 +94,14 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
     }
 
     function onRecieveChange(message) {
+
+        //save caret position
+        var focusedElement = document.activeElement;
+        var caretPos = focusedElement.selectionStart;
+
+        var prevContent = focusedElement.value;
+        var prevContentLength = focusedElement.value.length;
+
         console.log('Recieved a document update', message);
         $scope.$apply(function () {
             $scope.documentUpdating = true;
@@ -104,6 +112,16 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
             $scope.original = JSON.stringify($scope.document);
             $scope.documentUpdating = false;
         });
+
+        var currentContent = focusedElement.value;
+        var lenghtChangedSize = currentContent.length - prevContentLength;
+
+        //set caret position
+        if (prevContent.slice(0,caretPos) === currentContent.slice(0,caretPos)){
+            focusedElement.setSelectionRange(caretPos,caretPos);
+        } else {
+            focusedElement.setSelectionRange(caretPos+lenghtChangedSize,caretPos+lenghtChangedSize);
+        }
     }
 
     function waiter() {
@@ -119,7 +137,14 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
     setTimeout(waiter, 1000);
 
     $scope.saveDocument = function() {
+        var timestamp = new Date();
+        var hours = timestamp.getHours();
+        var minutes = timestamp.getMinutes();
+        var seconds = timestamp.getSeconds();
+        var formattedTime = hours + ':' + minutes + ':' + seconds;
+
         $scope.document.$update({id: $scope.document.Id});
+        Socket.send('documentsaved', {documentId: $scope.document.Id, name: $scope.document.Name, timestamp:formattedTime});
         $location.url('/document/overview');
     };
 
@@ -138,6 +163,19 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
 
     $scope.addField = function(fieldName){
         $scope.count[fieldName]++;
+    };
+
+    $scope.openAssetpicker = function(){
+        if(!$scope.files){
+            $scope.files = FileStorage.query();
+        }
+    };
+
+    $scope.addAssets = function(fieldName){
+        $('.asset:checked').each(function(){
+            $scope.document.Fields[fieldName].push(this.value);
+        });
+        $('#assetpicker').modal('hide');
     };
 
 });
