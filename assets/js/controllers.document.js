@@ -94,13 +94,15 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
     }
 
     function onRecieveChange(message) {
-
         //save caret position
         var focusedElement = document.activeElement;
-        var caretPos = focusedElement.selectionStart;
+        var fieldFocus = focusedElement !== document.body;
 
-        var prevContent = focusedElement.value;
-        var prevContentLength = focusedElement.value.length;
+        if (fieldFocus){
+            var caretPos = focusedElement.selectionStart;
+            var prevContent = focusedElement.value;
+            var prevContentLength = focusedElement.value.length;
+        }
 
         console.log('Recieved a document update', message);
         $scope.$apply(function () {
@@ -112,15 +114,16 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
             $scope.original = JSON.stringify($scope.document);
             $scope.documentUpdating = false;
         });
+        if (fieldFocus){
+            var currentContent = focusedElement.value;
+            var lenghtChangedSize = currentContent.length - prevContentLength;
 
-        var currentContent = focusedElement.value;
-        var lenghtChangedSize = currentContent.length - prevContentLength;
-
-        //set caret position
-        if (prevContent.slice(0,caretPos) === currentContent.slice(0,caretPos)){
-            focusedElement.setSelectionRange(caretPos,caretPos);
-        } else {
-            focusedElement.setSelectionRange(caretPos+lenghtChangedSize,caretPos+lenghtChangedSize);
+            //set caret position
+            if (prevContent.slice(0,caretPos) === currentContent.slice(0,caretPos)){
+                focusedElement.setSelectionRange(caretPos,caretPos);
+            } else {
+                focusedElement.setSelectionRange(caretPos+lenghtChangedSize,caretPos+lenghtChangedSize);
+            }
         }
     }
 
