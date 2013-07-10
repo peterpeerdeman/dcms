@@ -88,7 +88,7 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
             if (oldHash != newHash) {
                 var differ = new diff_match_patch();
                 var patch = differ.patch_make($scope.original, newJson);
-                Socket.send('document.' + $scope.document.Id, {'hash': oldHash, 'patch': patch});
+                Socket.send('document.' + $scope.document.Id, JSON.stringify({'hash': oldHash, 'patch': patch}));
             }
         }
     }
@@ -99,7 +99,7 @@ dcmsControllers.controller('EditDocumentCtrl', function EditDocumentCtrl($scope,
             $scope.documentUpdating = true;
             var current = JSON.stringify($scope.document);
             var differ = new diff_match_patch();
-            var patchedDocument = differ.patch_apply(message.data.patch, current);
+            var patchedDocument = differ.patch_apply(JSON.parse(message.data).patch, current);
             $scope.document = JSON.parse(patchedDocument[0]);
             $scope.original = JSON.stringify($scope.document);
             $scope.documentUpdating = false;
