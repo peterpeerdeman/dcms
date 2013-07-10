@@ -13,10 +13,6 @@
 
     <h1>Edit document {{document.Name}}</h1>
 
-    <!--detail page for {{documentId}}<br/>-->
-    <!--<p>Id: {{document.Id}}</p>-->
-    <!--<p>Name: {{document.Name}}</p>-->
-
     <form class="form-horizontal" name="editForm" id="edit-form">
 
         <div class="control-group">
@@ -44,10 +40,35 @@
                     </markdown>
                 </div>
                 <div ng-switch-when="date">
-                    <input ui-date="dateOptions" ng-model="document.Fields[field.Name]"/>
+                    <input ui-date="dateOptions" ui-date-format ng-model="document.Fields[field.Name]"/>
                 </div>
                 <div ng-switch-when="file">
-                    Referentie naar file
+                    <a href="#assetpicker" role="button" class="btn" data-toggle="modal" ng-click="openAssetpicker()">File picker</a>
+
+                    <p ng-show="document.Fields[field.Name].length">Chosen:</p>
+                    <ul>
+                        <li ng-repeat="link in document.Fields[field.Name]">
+                            <a href="/content/{{link}}">{{ link }}</a>
+                        </li>
+                    </ul>
+
+                    <!-- asset picker modal -->
+                    <div id="assetpicker" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 id="myModalLabel">Pick your file</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-inline" ng-repeat="file in files">
+                                <input class="asset" value="{{file.Id}}" ng-model="file.checked" type="checkbox" />
+                                <label for="">{{ file.Name }}</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                            <button class="btn btn-primary" ng-click="addAssets(field.Name)">Add file(s)</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

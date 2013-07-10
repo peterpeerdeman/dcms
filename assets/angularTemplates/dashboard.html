@@ -1,3 +1,11 @@
 <h1>Dashboard</h1>
 
-<button cls="btn" ng-click="sendMessage()">Send message</button>
+<button class="btn" ng-click="sendMessage()">Send message</button>
+
+<div ng-show="messages.length" class="notification alert alert-info">
+    <ul class="unstyled">
+        <li ng-repeat="message in messages">
+            {{ message.timestamp }}: Document <a href="#/document/edit/{{ message.documentId }}">{{ message.documentName }}</a> got saved!
+        </li>
+    </ul>
+</div>

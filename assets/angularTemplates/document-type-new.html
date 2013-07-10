@@ -4,15 +4,15 @@
 <div class="span9">
 	<h1>Create new document type</h1>
 
-	<form class="form-horizontal" name="editForm" id="edit-form">
+	<form class="form-horizontal" name="editForm" id="edit-form" novalidate>
 
 	    <div class="control-group">
 	        <label class="control-label" for="name">Name</label>
 	        <div class="controls">
-	            <input id="name" placeholder="Title" ng-model="documentType.Name">
+	            <input id="name" placeholder="Title" ng-model="documentType.Name" required>
 	        </div>
 	    </div>
 
-	    <button class="btn btn-primary" ng-click="createDocumentType()">Create</button>
+	    <button class="btn btn-primary" ng-click="createDocumentType()" ng-disabled="!documentType.Name">Create</button>
 	</form>
 </div>

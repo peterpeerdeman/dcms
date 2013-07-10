@@ -27,3 +27,13 @@ body {
     padding-top: 60px;
     padding-bottom: 40px;
 }
+
+.notification{
+    position: fixed;
+    width:100%;
+    bottom: 0;
+}
+
+#assetpicker input[type="checkbox"]{
+    vertical-align: top;
+}
