@@ -59,13 +59,11 @@ func writer(ws *websocket.Conn, observers *list.List) {
 				log.Printf("Channel closed")
 				return
 			}
-			if notification.sender == ws {
-				log.Printf("Not sending to self.")
-			} else {
-				log.Printf("Sending %v", notification)
+			handleNotification(notification)
+			if notification.sender != ws {
 				err := websocket.JSON.Send(ws, notification)
 				if err != nil {
-					log.Printf("writer() %v", err)
+					log.Printf("writer() error %v", err)
 					return
 				}
 			}

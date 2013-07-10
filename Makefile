@@ -1,4 +1,5 @@
 all:
+	go install github.com/sergi/go-diff/diff
 	go install storage
 	go install resty
 	go install mysite

@@ -41,7 +41,6 @@ func Cms() {
 	contentRouter := mux.NewRouter()
 	contentRouter.HandleFunc("/content/{id}", GetContent).Methods("GET")
 	http.Handle("/content/", contentRouter)
-
 }
 
 func serveSingle(pattern string, filename string) {
