@@ -37,10 +37,11 @@ func main() {
 	resty.Cms()
 	site.Site()
 
+	log.Println("starting to listen on " + config.ListenAddress)
 	listenErr := http.ListenAndServe(config.ListenAddress, nil)
 	if listenErr != nil {
 		log.Fatal(listenErr)
-	}
+	} 
 }
 
 func ReadConfiguration(configFile string) error {
